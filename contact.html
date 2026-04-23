@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contact & Enquiries — Bishop & Co. Luxury Timepieces</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    /* ── Contact Layout ── */
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1.4fr 1fr;
+      gap: 80px;
+      align-items: start;
+    }
+
+    /* ── Form ── */
+    .form-card {
+      background: var(--dark-2);
+      border: 1px solid rgba(201,168,76,0.12);
+      padding: 48px;
+    }
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 24px;
+    }
+    .form-group.full { grid-column: 1 / -1; }
+    label {
+      font-size: 9px;
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      color: var(--gold);
+      text-transform: uppercase;
+    }
+    label .req { color: var(--gold); margin-left: 2px; }
+    input[type="text"],
+    input[type="email"],
+    input[type="tel"],
+    select,
+    textarea {
+      background: var(--dark-3);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 0;
+      color: var(--white);
+      font-family: var(--sans);
+      font-size: 13px;
+      font-weight: 300;
+      padding: 14px 16px;
+      width: 100%;
+      outline: none;
+      transition: border-color var(--transition);
+      -webkit-appearance: none;
+      appearance: none;
+    }
+    input:focus, select:focus, textarea:focus {
+      border-color: rgba(201,168,76,0.5);
+    }
+    input::placeholder, textarea::placeholder {
+      color: var(--mid);
+      font-size: 12px;
+    }
+    select { cursor: pointer; }
+    select option { background: var(--dark-3); color: var(--white); }
+    textarea { resize: vertical; min-height: 140px; line-height: 1.6; }
+
+    /* Custom select arrow */
+    .select-wrap { position: relative; }
+    .select-wrap::after {
+      content: '▾';
+      position: absolute;
+      right: 14px; top: 50%;
+      transform: translateY(-50%);
+      color: var(--gold);
+      font-size: 12px;
+      pointer-events: none;
+    }
+
+    /* Validation states */
+    input:invalid:not(:placeholder-shown),
+    select:invalid,
+    textarea:invalid:not(:placeholder-shown) {
+      border-color: rgba(220, 80, 80, 0.5);
+    }
+    input:valid:not(:placeholder-shown),
+    textarea:valid:not(:placeholder-shown) {
+      border-color: rgba(100, 180, 100, 0.4);
+    }
+
+    .form-submit { margin-top: 8px; width: 100%; }
+    .btn-submit {
+      width: 100%;
+      padding: 16px 32px;
+      background: var(--gold);
+      border: 1px solid var(--gold);
+      color: var(--dark);
+      font-family: var(--sans);
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: background var(--transition), color var(--transition);
+    }
+    .btn-submit:hover { background: var(--gold-light); border-color: var(--gold-light); }
+
+    /* Success message */
+    .form-success {
+      display: none;
+      background: rgba(100,180,100,0.08);
+      border: 1px solid rgba(100,180,100,0.3);
+      padding: 20px 24px;
+      margin-top: 24px;
+      font-size: 13px;
+      color: #90d090;
+    }
+
+    /* ── Info Panel ── */
+    .info-panel { display: flex; flex-direction: column; gap: 32px; }
+    .info-card {
+      background: var(--dark-2);
+      border: 1px solid rgba(201,168,76,0.1);
+      padding: 32px;
+    }
+    .info-card-title {
+      font-size: 9px;
+      font-weight: 600;
+      letter-spacing: 0.22em;
+      color: var(--gold);
+      text-transform: uppercase;
+      margin-bottom: 20px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid rgba(201,168,76,0.12);
+    }
+    .info-row {
+      display: flex;
+      gap: 14px;
+      margin-bottom: 14px;
+      align-items: flex-start;
+    }
+    .info-icon {
+      width: 20px; height: 20px;
+      border-radius: 50%;
+      border: 1px solid rgba(201,168,76,0.3);
+      flex-shrink: 0;
+      margin-top: 1px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .info-icon svg { width: 10px; height: 10px; stroke: var(--gold); fill: none; stroke-width: 2; }
+    .info-text { font-size: 13px; color: var(--muted); line-height: 1.6; }
+    .info-text strong { color: var(--white); font-weight: 400; display: block; margin-bottom: 2px; }
+
+    .hours-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+    .hours-row {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .hours-day { font-size: 10px; color: var(--muted); letter-spacing: 0.05em; }
+    .hours-time { font-size: 12px; color: var(--white); }
+
+    .map-placeholder {
+      height: 180px;
+      background: var(--dark-3);
+      border: 1px solid rgba(201,168,76,0.08);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .map-placeholder span {
+      font-size: 9px;
+      letter-spacing: 0.2em;
+      color: var(--gold-dim);
+      text-transform: uppercase;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <div class="container">
+      <div class="nav-left">
+        <div class="nav-links">
+          <a href="index.html">Home</a>
+          <a href="about.html">About Us</a>
+        </div>
+      </div>
+      <a href="index.html" class="nav-logo">
+        <span class="nav-logo-main">BISHOP &amp; CO.</span>
+        <span class="nav-logo-sub">Luxury Timepieces</span>
+      </a>
+      <div class="nav-right">
+        <div class="nav-links">
+          <a href="collections.html">Collections</a>
+          <a href="gallery.html">Gallery</a>
+          <a href="contact.html" class="active">Contact</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- PAGE HERO -->
+  <div class="page-hero">
+    <div class="container">
+      <span class="tag">Get in Touch</span>
+      <h1 class="section-title">Contact &amp; Enquiries</h1>
+    </div>
+  </div>
+
+  <!-- MAIN CONTACT SECTION -->
+  <section>
+    <div class="container">
+      <div class="contact-grid">
+
+        <!-- FORM -->
+        <div>
+          <span class="tag">Enquiry Form</span>
+          <h2 class="section-title" style="margin-bottom: 32px;">Send Us a Message</h2>
+          <div class="form-card">
+            <form id="enquiry-form" novalidate>
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="full-name">Full Name <span class="req">*</span></label>
+                  <input type="text" id="full-name" name="full_name" placeholder="e.g. John Moeti" required minlength="2" />
+                </div>
+                <div class="form-group">
+                  <label for="email">Email Address <span class="req">*</span></label>
+                  <input type="email" id="email" name="email" placeholder="john@example.com" required />
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="phone">Phone Number <span class="req">*</span></label>
+                  <input type="tel" id="phone" name="phone" placeholder="+267 7X XXX XXX" required pattern="[\+0-9\s\-]{7,15}" />
+                </div>
+                <div class="form-group">
+                  <label for="watch">Watch of Interest</label>
+                  <input type="text" id="watch" name="watch_interest" placeholder="e.g. Rolex Submariner" />
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="enquiry-type">Type of Enquiry <span class="req">*</span></label>
+                <div class="select-wrap">
+                  <select id="enquiry-type" name="enquiry_type" required>
+                    <option value="" disabled selected>— Select enquiry type —</option>
+                    <option value="purchase">Purchase Enquiry</option>
+                    <option value="service">After-Sales Service</option>
+                    <option value="corporate">Corporate Gifting</option>
+                    <option value="consultation">Book a Consultation</option>
+                    <option value="general">General Enquiry</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="message">Message <span class="req">*</span></label>
+                <textarea id="message" name="message" placeholder="Please describe your enquiry in detail..." required minlength="10"></textarea>
+              </div>
+              <div class="form-submit">
+                <button type="submit" class="btn-submit">Submit Enquiry</button>
+              </div>
+              <div class="form-success" id="form-success">
+                Thank you for your enquiry. A member of the Bishop &amp; Co. team will be in touch with you shortly.
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <!-- INFO PANEL -->
+        <div class="info-panel">
+
+          <div>
+            <span class="tag">Boutique Details</span>
+            <h2 class="section-title" style="font-size: 26px; margin-bottom: 24px;">Find Us</h2>
+          </div>
+
+          <div class="info-card">
+            <div class="info-card-title">Contact Information</div>
+            <div class="info-row">
+              <div class="info-icon">
+                <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+              </div>
+              <div class="info-text">
+                <strong>Address</strong>
+                Main Mall, Gaborone, Botswana
+              </div>
+            </div>
+            <div class="info-row">
+              <div class="info-icon">
+                <svg viewBox="0 0 24 24"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
+              </div>
+              <div class="info-text">
+                <strong>Telephone</strong>
+                +267 3XX XXXX
+              </div>
+            </div>
+            <div class="info-row">
+              <div class="info-icon">
+                <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+              </div>
+              <div class="info-text">
+                <strong>Email</strong>
+                info@bishopcobw.com
+              </div>
+            </div>
+          </div>
+
+          <div class="info-card">
+            <div class="info-card-title">Opening Hours</div>
+            <div class="hours-grid">
+              <div class="hours-row">
+                <span class="hours-day">Monday – Friday</span>
+                <span class="hours-time">09:00 – 18:00</span>
+              </div>
+              <div class="hours-row">
+                <span class="hours-day">Saturday</span>
+                <span class="hours-time">09:00 – 17:00</span>
+              </div>
+              <div class="hours-row">
+                <span class="hours-day">Sunday</span>
+                <span class="hours-time">By Appointment</span>
+              </div>
+              <div class="hours-row">
+                <span class="hours-day">Public Holidays</span>
+                <span class="hours-time">Closed</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="map-placeholder">
+            <span>Map Placeholder<br>Main Mall, Gaborone</span>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-col">
+          <div class="footer-brand-name">BISHOP &amp; CO.</div>
+          <div class="footer-brand-sub">Luxury Timepieces</div>
+          <p class="footer-desc">A premium luxury watch boutique based in Gaborone, Botswana — curating the world's finest timepieces for discerning collectors.</p>
+        </div>
+        <div class="footer-col">
+          <div class="footer-col-title">Navigate</div>
+          <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="about.html">About Us</a></li>
+            <li><a href="collections.html">Collections</a></li>
+            <li><a href="gallery.html">Gallery</a></li>
+            <li><a href="contact.html">Contact</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <div class="footer-col-title">Contact</div>
+          <ul>
+            <li><a href="#">Main Mall, Gaborone</a></li>
+            <li><a href="tel:+26731234567">+267 3XX XXXX</a></li>
+            <li><a href="mailto:info@bishopcobw.com">info@bishopcobw.com</a></li>
+            <li><a href="#">Mon–Sat: 09:00–18:00</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <div class="footer-col-title">Follow Us</div>
+          <ul>
+            <li><a href="#">Instagram</a></li>
+            <li><a href="#">Facebook</a></li>
+            <li><a href="#">LinkedIn</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span class="footer-copy">&copy; 2026 Bishop &amp; Co. Luxury Timepieces. All rights reserved.</span>
+        <div class="footer-social">
+          <a href="#">Instagram</a>
+          <a href="#">Facebook</a>
+          <a href="#">LinkedIn</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById('enquiry-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const form = e.target;
+      if (!form.checkValidity()) {
+        form.reportValidity();
+        return;
+      }
+      const btn = form.querySelector('.btn-submit');
+      btn.textContent = 'Sending...';
+      btn.disabled = true;
+      setTimeout(() => {
+        form.reset();
+        btn.textContent = 'Submit Enquiry';
+        btn.disabled = false;
+        document.getElementById('form-success').style.display = 'block';
+        setTimeout(() => {
+          document.getElementById('form-success').style.display = 'none';
+        }, 6000);
+      }, 1200);
+    });
+  </script>
+
+</body>
+</html>

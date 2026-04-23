@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>About Us — Bishop & Co. Luxury Timepieces</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    /* ── Story Section ── */
+    .story-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+    }
+    .story-img {
+      height: 480px;
+      background: var(--dark-3);
+      border: 1px solid rgba(201,168,76,0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+    .story-img::before {
+      content: '';
+      position: absolute;
+      inset: 16px;
+      border: 1px solid rgba(201,168,76,0.08);
+    }
+    .img-placeholder-label {
+      font-size: 9px;
+      letter-spacing: 0.2em;
+      color: var(--gold-dim);
+      text-align: center;
+      text-transform: uppercase;
+    }
+    .story-body p {
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.9;
+      margin-bottom: 18px;
+    }
+
+    /* ── Mission Vision Values ── */
+    .mvv-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2px;
+    }
+    .mvv-item {
+      padding: 48px 36px;
+      background: var(--dark-3);
+      border: 1px solid rgba(255,255,255,0.04);
+      transition: border-color var(--transition);
+    }
+    .mvv-item:hover { border-color: rgba(201,168,76,0.25); }
+    .mvv-label {
+      font-size: 9px;
+      font-weight: 600;
+      letter-spacing: 0.25em;
+      color: var(--gold);
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+    .mvv-text {
+      font-family: var(--serif);
+      font-size: 17px;
+      font-weight: 300;
+      color: var(--white);
+      line-height: 1.6;
+    }
+
+    /* ── Craftsmanship ── */
+    .craft-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+    }
+    .craft-img {
+      height: 400px;
+      background: var(--dark-3);
+      border: 1px solid rgba(201,168,76,0.12);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+    .craft-img::before {
+      content: '';
+      position: absolute;
+      inset: 16px;
+      border: 1px solid rgba(201,168,76,0.06);
+    }
+    .craft-body p {
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.9;
+      margin-bottom: 18px;
+    }
+
+    /* ── Brand Stats ── */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 2px;
+    }
+    .stat-item {
+      padding: 40px 24px;
+      background: var(--dark-2);
+      border: 1px solid rgba(255,255,255,0.04);
+      text-align: center;
+    }
+    .stat-number {
+      font-family: var(--serif);
+      font-size: 48px;
+      font-weight: 300;
+      color: var(--gold);
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+    .stat-label {
+      font-size: 9px;
+      letter-spacing: 0.2em;
+      color: var(--muted);
+      text-transform: uppercase;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <div class="container">
+      <div class="nav-left">
+        <div class="nav-links">
+          <a href="index.html">Home</a>
+          <a href="about.html" class="active">About Us</a>
+        </div>
+      </div>
+      <a href="index.html" class="nav-logo">
+        <span class="nav-logo-main">BISHOP &amp; CO.</span>
+        <span class="nav-logo-sub">Luxury Timepieces</span>
+      </a>
+      <div class="nav-right">
+        <div class="nav-links">
+          <a href="collections.html">Collections</a>
+          <a href="gallery.html">Gallery</a>
+          <a href="contact.html">Contact</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- PAGE HERO -->
+  <div class="page-hero">
+    <div class="container">
+      <span class="tag">Our Story</span>
+      <h1 class="section-title">The Bishop &amp; Co. Legacy</h1>
+    </div>
+  </div>
+
+  <!-- BRAND STORY -->
+  <section>
+    <div class="container">
+      <div class="story-grid">
+        <div class="story-img">
+          <span class="img-placeholder-label">Boutique Interior<br>Image Placeholder</span>
+        </div>
+        <div class="story-body">
+          <span class="tag">Founding History</span>
+          <h2 class="section-title">Born from a Passion<br>for Precision</h2>
+          <div class="divider"></div>
+          <p>Bishop &amp; Co. was founded in Gaborone, Botswana, with a singular vision: to bring the world's most prestigious timepieces to Southern Africa's most discerning collectors. What began as a passion for horology has grown into the region's foremost luxury watch boutique.</p>
+          <p>Our founder, inspired by decades of collecting and a deep reverence for Swiss craftsmanship, built Bishop &amp; Co. on the belief that a truly exceptional timepiece deserves an equally exceptional retail experience. Every watch in our collection is handpicked and authenticated to the highest standards.</p>
+          <p>Today, Bishop &amp; Co. serves individual collectors, corporate clients, and watch enthusiasts across Botswana and the broader Southern African region — offering access to iconic brands that were once only available abroad.</p>
+          <a href="collections.html" class="btn" style="margin-top: 12px;">Explore Collections</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STATS -->
+  <section class="darker-bg" style="padding: 0;">
+    <div class="container" style="padding: 0 40px;">
+      <div class="stats-grid">
+        <div class="stat-item">
+          <div class="stat-number">4+</div>
+          <div class="stat-label">Iconic Brands</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number">100%</div>
+          <div class="stat-label">Authenticated</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number">3+</div>
+          <div class="stat-label">Years of Excellence</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number">BWA</div>
+          <div class="stat-label">Based in Botswana</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MISSION / VISION / VALUES -->
+  <section class="dark-bg">
+    <div class="container">
+      <span class="tag" style="text-align:center; display:block;">Our Principles</span>
+      <h2 class="section-title" style="text-align:center; margin-bottom: 60px;">Mission · Vision · Values</h2>
+      <div class="mvv-grid">
+        <div class="mvv-item">
+          <div class="mvv-label">Mission</div>
+          <p class="mvv-text">To curate and deliver the world's finest timepieces to Southern African collectors, backed by expertise, authenticity, and unparalleled service.</p>
+        </div>
+        <div class="mvv-item">
+          <div class="mvv-label">Vision</div>
+          <p class="mvv-text">To become the leading luxury watch destination in Africa — a name synonymous with prestige, trust, and horological excellence.</p>
+        </div>
+        <div class="mvv-item">
+          <div class="mvv-label">Values</div>
+          <p class="mvv-text">Integrity in every transaction. Excellence in every detail. A commitment to building lasting relationships with every client we serve.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CRAFTSMANSHIP -->
+  <section>
+    <div class="container">
+      <div class="craft-grid">
+        <div class="craft-body">
+          <span class="tag">Craftsmanship &amp; Heritage</span>
+          <h2 class="section-title">The Art Behind<br>Every Timepiece</h2>
+          <div class="divider"></div>
+          <p>The watches we carry represent centuries of horological tradition. From the precise mechanical movements of Patek Philippe to the iconic sports engineering of Rolex, each brand in our collection tells a story of uncompromising craftsmanship.</p>
+          <p>Our team is deeply versed in the heritage of each watchmaker we represent. When you visit Bishop &amp; Co., you are not merely purchasing a watch — you are investing in a legacy, a story, and a standard of excellence that transcends generations.</p>
+          <p>We partner exclusively with authorised channels to ensure that every timepiece sold carries its complete provenance, warranty documentation, and the assurance of authenticity.</p>
+        </div>
+        <div class="craft-img">
+          <span class="img-placeholder-label">Watch Detail<br>Image Placeholder</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-col">
+          <div class="footer-brand-name">BISHOP &amp; CO.</div>
+          <div class="footer-brand-sub">Luxury Timepieces</div>
+          <p class="footer-desc">A premium luxury watch boutique based in Gaborone, Botswana — curating the world's finest timepieces for discerning collectors.</p>
+        </div>
+        <div class="footer-col">
+          <div class="footer-col-title">Navigate</div>
+          <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="about.html">About Us</a></li>
+            <li><a href="collections.html">Collections</a></li>
+            <li><a href="gallery.html">Gallery</a></li>
+            <li><a href="contact.html">Contact</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <div class="footer-col-title">Contact</div>
+          <ul>
+            <li><a href="#">Main Mall, Gaborone</a></li>
+            <li><a href="tel:+26731234567">+267 3XX XXXX</a></li>
+            <li><a href="mailto:info@bishopcobw.com">info@bishopcobw.com</a></li>
+            <li><a href="#">Mon–Sat: 09:00–18:00</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <div class="footer-col-title">Follow Us</div>
+          <ul>
+            <li><a href="#">Instagram</a></li>
+            <li><a href="#">Facebook</a></li>
+            <li><a href="#">LinkedIn</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span class="footer-copy">&copy; 2026 Bishop &amp; Co. Luxury Timepieces. All rights reserved.</span>
+        <div class="footer-social">
+          <a href="#">Instagram</a>
+          <a href="#">Facebook</a>
+          <a href="#">LinkedIn</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>

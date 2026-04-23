@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gallery — Bishop & Co. Luxury Timepieces</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    /* ── Gallery Grid ── */
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+    .gallery-item {
+      background: var(--dark-3);
+      border: 1px solid rgba(201,168,76,0.08);
+      overflow: hidden;
+      position: relative;
+      cursor: pointer;
+      transition: border-color var(--transition), transform var(--transition);
+    }
+    .gallery-item:hover { border-color: rgba(201,168,76,0.35); transform: scale(1.01); }
+    .gallery-item.tall { grid-row: span 2; }
+    .gallery-item.wide { grid-column: span 2; }
+    .gallery-img-placeholder {
+      width: 100%;
+      height: 100%;
+      min-height: 200px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    .gallery-item.tall .gallery-img-placeholder { min-height: 420px; }
+    .gallery-item.wide .gallery-img-placeholder { min-height: 200px; }
+    .gallery-ph-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: 1px solid rgba(201,168,76,0.2);
+    }
+    .gallery-ph-label {
+      font-size: 8px;
+      letter-spacing: 0.2em;
+      color: rgba(201,168,76,0.4);
+      text-transform: uppercase;
+      text-align: center;
+    }
+    .gallery-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(14,14,14,0);
+      display: flex;
+      align-items: flex-end;
+      padding: 20px;
+      transition: background var(--transition);
+    }
+    .gallery-item:hover .gallery-overlay { background: rgba(14,14,14,0.6); }
+    .gallery-caption {
+      font-size: 10px;
+      letter-spacing: 0.15em;
+      color: var(--gold);
+      text-transform: uppercase;
+      opacity: 0;
+      transform: translateY(8px);
+      transition: opacity var(--transition), transform var(--transition);
+    }
+    .gallery-item:hover .gallery-caption { opacity: 1; transform: translateY(0); }
+
+    /* ── Lightbox ── */
+    .lightbox {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.92);
+      z-index: 200;
+      align-items: center;
+      justify-content: center;
+    }
+    .lightbox.open { display: flex; }
+    .lightbox-content {
+      max-width: 800px;
+      width: 90%;
+      background: var(--dark-2);
+      border: 1px solid rgba(201,168,76,0.2);
+      padding: 40px;
+      position: relative;
+    }
+    .lightbox-close {
+      position: absolute;
+      top: 16px; right: 20px;
+      font-size: 20px;
+      color: var(--muted);
+      cursor: pointer;
+      background: none;
+      border: none;
+      line-height: 1;
+      transition: color var(--transition);
+    }
+    .lightbox-close:hover { color: var(--gold); }
+    .lightbox-img {
+      width: 100%;
+      height: 400px;
+      background: var(--dark-3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+    .lightbox-title {
+      font-family: var(--serif);
+      font-size: 22px;
+      font-weight: 300;
+      color: var(--white);
+      margin-bottom: 6px;
+    }
+    .lightbox-desc { font-size: 12px; color: var(--muted); }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <div class="container">
+      <div class="nav-left">
+        <div class="nav-links">
+          <a href="index.html">Home</a>
+          <a href="about.html">About Us</a>
+        </div>
+      </div>
+      <a href="index.html" class="nav-logo">
+        <span class="nav-logo-main">BISHOP &amp; CO.</span>
+        <span class="nav-logo-sub">Luxury Timepieces</span>
+      </a>
+      <div class="nav-right">
+        <div class="nav-links">
+          <a href="collections.html">Collections</a>
+          <a href="gallery.html" class="active">Gallery</a>
+          <a href="contact.html">Contact</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- PAGE HERO -->
+  <div class="page-hero">
+    <div class="container">
+      <span class="tag">Visual Showcase</span>
+      <h1 class="section-title">The Gallery</h1>
+    </div>
+  </div>
+
+  <!-- WATCH PHOTOGRAPHY -->
+  <section>
+    <div class="container">
+      <span class="tag">01</span>
+      <h2 class="section-title" style="margin-bottom: 36px;">Watch Photography</h2>
+      <div class="gallery-grid">
+        <div class="gallery-item tall" onclick="openLightbox('Rolex Submariner', 'Close-up macro photography of the Rolex Submariner Date ceramic bezel.')">
+          <div class="gallery-img-placeholder"><div class="gallery-ph-icon"></div><span class="gallery-ph-label">Watch Detail<br>Portrait</span></div>
+          <div class="gallery-overlay"><span class="gallery-caption">Rolex Submariner</span></div>
+        </div>
+        <div class="gallery-item" onclick="openLightbox('Patek Philippe Calatrava', 'Elegant side-profile shot of the Patek Philippe Calatrava on a slate surface.')">
+          <div class="gallery-img-placeholder"><div class="gallery-ph-icon"></div><span class="gallery-ph-label">Watch Portrait</span></div>
+          <div class="gallery-overlay"><span class="gallery-caption">Patek Philippe Calatrava</span></div>
+        </div>
+        <div class="gallery-item" onclick="openLightbox('Omega Speedmaster', 'The iconic Omega Speedmaster Moonwatch on a dark velvet surface.')">
+          <div class="gallery-img-placeholder"><div class="gallery-ph-icon"></div><span class="gallery-ph-label">Watch Portrait</span></div>
+          <div class="gallery-overlay"><span class="gallery-caption">Omega Speedmaster</span></div>
+        </div>
+        <div class="gallery-item tall" onclick="openLightbox('Cartier Tank Must', 'Overhead flat-lay of the Cartier Tank Must on marble.')">
+          <div class="gallery-img-placeholder"><div class="gallery-ph-icon"></div><span class="gallery-ph-label">Watch Detail<br>Portrait</span></div>
+          <div class="gallery-overlay"><span class="gallery-caption">Cartier Tank Must</span></div>
+        </div>
+        <div class="gallery-item" onclick="openLightbox('Rolex Daytona', 'The Rolex Daytona Cosmograph chronograph subdials in detail.')">
+          <div class="gallery-img-placeholder"><div class="gallery-ph-icon"></div><span class="gallery-ph-label">Watch Portrait</span></div>
+          <div class="gallery-overlay"><span class="gallery-caption">Rolex Daytona</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- BOUTIQUE INTERIOR -->
+  <section class="dark-bg">
+    <div class="container">
+      <span class="tag">02</span>
+      <h2 class="section-title" style="margin-bottom: 36px;">Boutique Interior</h2>
+      <div class="gallery-grid">
+        <div class="gallery-item" onclick="openLightbox('Main Display', 'The Bishop & Co. main watch display counter in Gaborone.')">
+          <div class="gallery-img-placeholder"><div class="gallery-ph-icon"></div><span class="gallery-ph-label">Interior Shot</span></div>
+          <div class="gallery-overlay"><span class="gallery-caption">Main Display</span></div>
+        </div>
+        <div class="gallery-item tall" onclick="openLightbox('Boutique Entrance', 'The elegant entrance of the Bishop & Co. boutique at Main Mall.')">
+          <div class="gallery-img-placeholder"><div class="gallery-ph-icon"></div><span class="gallery-ph-label">Interior<br>Portrait</span></div>
+          <div class="gallery-overlay"><span class="gallery-caption">Boutique Entrance</span></div>
+        </div>
+        <div class="gallery-item" onclick="openLightbox('Watch Cases', 'Illuminated display cases showcasing the curated watch collection.')">
+          <div class="gallery-img-placeholder"><div class="gallery-ph-icon"></div><span class="gallery-ph-label">Interior Shot</span></div>
+          <div class="gallery-overlay"><span class="gallery-caption">Display Cases</span></div>
+        </div>
+        <div class="gallery-item wide" onclick="openLightbox('Consultation Area', 'The private consultation lounge at Bishop & Co.')">
+          <div class="gallery-img-placeholder"><div class="gallery-ph-icon"></div><span class="gallery-ph-label">Consultation Lounge — Wide Shot</span></div>
+          <div class="gallery-overlay"><span class="gallery-caption">Consultation Lounge</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LIFESTYLE SHOTS -->
+  <section>
+    <div class="container">
+      <span class="tag">03</span>
+      <h2 class="section-title" style="margin-bottom: 36px;">Lifestyle Shots</h2>
+      <div class="gallery-grid">
+        <div class="gallery-item tall" onclick="openLightbox('Collector Lifestyle', 'A distinguished collector examining a timepiece at the boutique.')">
+          <div class="gallery-img-placeholder"><div class="gallery-ph-icon"></div><span class="gallery-ph-label">Lifestyle<br>Portrait</span></div>
+          <div class="gallery-overlay"><span class="gallery-caption">The Collector</span></div>
+        </div>
+        <div class="gallery-item" onclick="openLightbox('Wrist Shot', 'A luxury Rolex on the wrist of a suited professional in Gaborone.')">
+          <div class="gallery-img-placeholder"><div class="gallery-ph-icon"></div><span class="gallery-ph-label">Wrist Shot</span></div>
+          <div class="gallery-overlay"><span class="gallery-caption">The Statement Piece</span></div>
+        </div>
+        <div class="gallery-item" onclick="openLightbox('Gift Packaging', 'Premium Bishop & Co. gift packaging and watch box presentation.')">
+          <div class="gallery-img-placeholder"><div class="gallery-ph-icon"></div><span class="gallery-ph-label">Gift Packaging</span></div>
+          <div class="gallery-overlay"><span class="gallery-caption">The Gift</span></div>
+        </div>
+        <div class="gallery-item tall" onclick="openLightbox('Corporate Event', 'Bishop & Co. at a corporate awards ceremony in Gaborone.')">
+          <div class="gallery-img-placeholder"><div class="gallery-ph-icon"></div><span class="gallery-ph-label">Corporate<br>Portrait</span></div>
+          <div class="gallery-overlay"><span class="gallery-caption">Corporate Events</span></div>
+        </div>
+        <div class="gallery-item" onclick="openLightbox('Craftsmanship', 'Intricate watch movement detail — a testament to Swiss craftsmanship.')">
+          <div class="gallery-img-placeholder"><div class="gallery-ph-icon"></div><span class="gallery-ph-label">Movement Detail</span></div>
+          <div class="gallery-overlay"><span class="gallery-caption">The Craft</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LIGHTBOX -->
+  <div class="lightbox" id="lightbox" onclick="closeLightbox(event)">
+    <div class="lightbox-content">
+      <button class="lightbox-close" onclick="closeLightbox()">&times;</button>
+      <div class="lightbox-img">
+        <span style="font-size:9px; letter-spacing:0.2em; color:rgba(201,168,76,0.4); text-transform:uppercase;">Image Placeholder</span>
+      </div>
+      <div class="lightbox-title" id="lb-title"></div>
+      <div class="lightbox-desc" id="lb-desc"></div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-col">
+          <div class="footer-brand-name">BISHOP &amp; CO.</div>
+          <div class="footer-brand-sub">Luxury Timepieces</div>
+          <p class="footer-desc">A premium luxury watch boutique based in Gaborone, Botswana — curating the world's finest timepieces for discerning collectors.</p>
+        </div>
+        <div class="footer-col">
+          <div class="footer-col-title">Navigate</div>
+          <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="about.html">About Us</a></li>
+            <li><a href="collections.html">Collections</a></li>
+            <li><a href="gallery.html">Gallery</a></li>
+            <li><a href="contact.html">Contact</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <div class="footer-col-title">Contact</div>
+          <ul>
+            <li><a href="#">Main Mall, Gaborone</a></li>
+            <li><a href="tel:+26731234567">+267 3XX XXXX</a></li>
+            <li><a href="mailto:info@bishopcobw.com">info@bishopcobw.com</a></li>
+            <li><a href="#">Mon–Sat: 09:00–18:00</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <div class="footer-col-title">Follow Us</div>
+          <ul>
+            <li><a href="#">Instagram</a></li>
+            <li><a href="#">Facebook</a></li>
+            <li><a href="#">LinkedIn</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span class="footer-copy">&copy; 2026 Bishop &amp; Co. Luxury Timepieces. All rights reserved.</span>
+        <div class="footer-social">
+          <a href="#">Instagram</a>
+          <a href="#">Facebook</a>
+          <a href="#">LinkedIn</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    function openLightbox(title, desc) {
+      document.getElementById('lb-title').textContent = title;
+      document.getElementById('lb-desc').textContent = desc;
+      document.getElementById('lightbox').classList.add('open');
+    }
+    function closeLightbox(e) {
+      if (!e || e.target === document.getElementById('lightbox') || e.currentTarget.tagName === 'BUTTON') {
+        document.getElementById('lightbox').classList.remove('open');
+      }
+    }
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
+  </script>
+
+</body>
+</html>
