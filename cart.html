@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Your Cart — Bishop &amp; Co. Luxury Timepieces</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+
+    /* ══════════════════════════════════════════
+       STEP PROGRESS BAR
+    ══════════════════════════════════════════ */
+    .checkout-progress {
+      background: var(--dark-2);
+      border-bottom: 1px solid rgba(201,168,76,0.1);
+      padding: 22px 0;
+    }
+    .progress-inner {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0;
+    }
+    .progress-step {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      position: relative;
+    }
+    .progress-step-num {
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,0.12);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px; font-weight: 500;
+      color: var(--muted);
+      background: var(--dark-2);
+      transition: all 0.4s;
+      position: relative; z-index: 1;
+    }
+    .progress-step.active .progress-step-num {
+      border-color: var(--gold);
+      color: var(--dark);
+      background: var(--gold);
+    }
+    .progress-step.done .progress-step-num {
+      border-color: var(--gold);
+      background: transparent;
+      color: var(--gold);
+    }
+    .progress-step-label {
+      font-size: 9px; font-weight: 500;
+      letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--muted); transition: color 0.4s;
+      white-space: nowrap;
+    }
+    .progress-step.active .progress-step-label { color: var(--gold); }
+    .progress-step.done  .progress-step-label { color: var(--muted); }
+    .progress-line {
+      width: 80px; height: 1px;
+      background: rgba(255,255,255,0.08);
+      margin: 0 4px; margin-bottom: 28px;
+      flex-shrink: 0; transition: background 0.4s;
+    }
+    .progress-line.done { background: var(--gold); }
+
+    /* ══════════════════════════════════════════
+       CHECKOUT LAYOUT  (left content + right summary)
+    ══════════════════════════════════════════ */
+    .checkout-layout {
+      display: grid;
+      grid-template-columns: 1fr 340px;
+      gap: 32px;
+      align-items: start;
+    }
+    .checkout-main { min-width: 0; }
+
+    /* ══════════════════════════════════════════
+       ORDER SUMMARY SIDEBAR
+    ══════════════════════════════════════════ */
+    .order-sidebar {
+      background: var(--dark-2);
+      border: 1px solid rgba(201,168,76,0.12);
+      padding: 28px;
+      position: sticky;
+      top: calc(var(--nav-h) + 20px);
+    }
+    .sidebar-title {
+      font-size: 9px; font-weight: 600;
+      letter-spacing: 0.25em; color: var(--gold);
+      text-transform: uppercase;
+      padding-bottom: 16px;
+      border-bottom: 1px solid rgba(201,168,76,0.1);
+      margin-bottom: 20px;
+    }
+    .sidebar-items { margin-bottom: 20px; }
+    .sidebar-item {
+      display: flex; gap: 12px; align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+    .sidebar-item:last-child { border-bottom: none; }
+    .sidebar-thumb {
+      width: 48px; height: 48px;
+      background: var(--dark-3);
+      border: 1px solid rgba(201,168,76,0.1);
+      flex-shrink: 0; overflow: hidden;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .sidebar-thumb img { width: 100%; height: 100%; object-fit: cover; }
+    .sidebar-thumb-ph { width: 24px; height: 24px; border-radius: 50%; border: 1px solid rgba(201,168,76,0.2); }
+    .sidebar-item-info { flex: 1; min-width: 0; }
+    .sidebar-item-brand { font-size: 8px; letter-spacing: 0.16em; color: var(--gold); text-transform: uppercase; margin-bottom: 2px; }
+    .sidebar-item-name { font-family: var(--serif); font-size: 14px; color: var(--white); line-height: 1.2; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .sidebar-item-qty { font-size: 10px; color: var(--muted); margin-top: 2px; }
+    .sidebar-item-price { font-family: var(--serif); font-size: 14px; color: var(--white); white-space: nowrap; flex-shrink: 0; }
+    .sidebar-row {
+      display: flex; justify-content: space-between;
+      font-size: 12px; color: var(--muted);
+      margin-bottom: 10px;
+    }
+    .sidebar-row.total {
+      border-top: 1px solid rgba(255,255,255,0.07);
+      padding-top: 14px; margin-top: 6px;
+      color: var(--white);
+    }
+    .sidebar-row.total .s-val {
+      font-family: var(--serif); font-size: 20px; color: var(--gold);
+    }
+    .sidebar-note { font-size: 10px; color: var(--mid); line-height: 1.7; margin-top: 14px; }
+    .sidebar-secure {
+      display: flex; align-items: center; gap: 8px;
+      margin-top: 16px; padding-top: 14px;
+      border-top: 1px solid rgba(255,255,255,0.04);
+      font-size: 10px; color: var(--mid);
+    }
+    .sidebar-secure svg { width: 13px; height: 13px; stroke: var(--gold-dim); fill: none; stroke-width: 1.5; flex-shrink: 0; }
+
+    /* ══════════════════════════════════════════
+       STEP PANELS
+    ══════════════════════════════════════════ */
+    .step-panel { display: none; }
+    .step-panel.active { display: block; }
+
+    /* ── Step header ── */
+    .step-head {
+      margin-bottom: 24px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+    .step-head-tag { font-size: 9px; font-weight: 600; letter-spacing: 0.22em; color: var(--gold); text-transform: uppercase; margin-bottom: 6px; display: block; }
+    .step-head-title { font-family: var(--serif); font-size: 28px; font-weight: 300; color: var(--white); }
+
+    /* ══════════════════════════════════════════
+       STEP 1 — CART
+    ══════════════════════════════════════════ */
+    .cart-items-hdr {
+      display: grid;
+      grid-template-columns: 1fr 120px 120px 36px;
+      gap: 16px; padding-bottom: 12px;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      font-size: 9px; font-weight: 600; letter-spacing: 0.2em;
+      color: var(--gold); text-transform: uppercase;
+    }
+    .cart-item {
+      display: grid;
+      grid-template-columns: 1fr 120px 120px 36px;
+      gap: 16px; padding: 20px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+      align-items: center;
+    }
+    .ci-info { display: flex; gap: 16px; align-items: center; }
+    .ci-thumb {
+      width: 68px; height: 68px; flex-shrink: 0;
+      background: var(--dark-3);
+      border: 1px solid rgba(201,168,76,0.1);
+      overflow: hidden; display: flex; align-items: center; justify-content: center;
+    }
+    .ci-thumb img { width: 100%; height: 100%; object-fit: cover; }
+    .ci-thumb-ph { width: 32px; height: 32px; border-radius: 50%; border: 1px solid rgba(201,168,76,0.2); }
+    .ci-brand { font-size: 8px; font-weight: 600; letter-spacing: 0.18em; color: var(--gold); text-transform: uppercase; margin-bottom: 4px; }
+    .ci-name { font-family: var(--serif); font-size: 16px; color: var(--white); }
+    .ci-price { font-family: var(--serif); font-size: 15px; color: var(--white); }
+    .ci-qty { display: flex; align-items: center; gap: 8px; }
+    .qty-btn {
+      width: 28px; height: 28px; border: 1px solid rgba(201,168,76,0.3);
+      background: transparent; color: var(--gold); font-size: 16px;
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      transition: all var(--transition); line-height: 1;
+    }
+    .qty-btn:hover { background: var(--gold); color: var(--dark); }
+    .qty-num { font-family: var(--serif); font-size: 17px; color: var(--white); min-width: 18px; text-align: center; }
+    .ci-remove { background: none; border: none; color: var(--mid); cursor: pointer; font-size: 20px; line-height: 1; transition: color var(--transition); }
+    .ci-remove:hover { color: #c05050; }
+    .cart-foot { margin-top: 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px; }
+    .btn-next {
+      padding: 15px 40px; background: var(--gold);
+      border: 1px solid var(--gold); color: var(--dark);
+      font-family: var(--sans); font-size: 10px; font-weight: 600;
+      letter-spacing: 0.22em; text-transform: uppercase;
+      cursor: pointer; transition: background var(--transition);
+    }
+    .btn-next:hover { background: var(--gold-light); }
+    .btn-back-link {
+      font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase;
+      color: var(--muted); cursor: pointer;
+      background: none; border: none; font-family: var(--sans);
+      transition: color var(--transition);
+    }
+    .btn-back-link:hover { color: var(--white); }
+
+    /* ── Empty cart ── */
+    .empty-cart { text-align: center; padding: 72px 0; }
+    .empty-icon {
+      width: 72px; height: 72px; border-radius: 50%;
+      border: 1px solid rgba(201,168,76,0.2);
+      margin: 0 auto 20px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .empty-icon svg { width: 28px; height: 28px; stroke: var(--gold-dim); fill: none; stroke-width: 1.5; }
+    .empty-title { font-family: var(--serif); font-size: 28px; font-weight: 300; color: var(--white); margin-bottom: 10px; }
+    .empty-text { font-size: 13px; color: var(--muted); margin-bottom: 28px; }
+
+    /* ══════════════════════════════════════════
+       STEP 2 — DETAILS
+    ══════════════════════════════════════════ */
+    .form-section-label {
+      font-size: 9px; font-weight: 600; letter-spacing: 0.22em;
+      color: var(--gold); text-transform: uppercase;
+      margin: 28px 0 16px; padding-bottom: 10px;
+      border-bottom: 1px solid rgba(201,168,76,0.1);
+    }
+    .form-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+    .fg { display: flex; flex-direction: column; gap: 7px; margin-bottom: 18px; }
+    .fg label { font-size: 9px; font-weight: 600; letter-spacing: 0.2em; color: var(--gold); text-transform: uppercase; }
+    .fg input, .fg select, .fg textarea {
+      background: var(--dark-3);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 0; color: var(--white);
+      font-family: var(--sans); font-size: 13px; font-weight: 300;
+      padding: 13px 15px; width: 100%; outline: none;
+      transition: border-color var(--transition);
+      -webkit-appearance: none; appearance: none;
+    }
+    .fg input:focus, .fg select:focus, .fg textarea:focus { border-color: rgba(201,168,76,0.5); }
+    .fg input::placeholder, .fg textarea::placeholder { color: var(--mid); font-size: 12px; }
+    .fg select { cursor: pointer; }
+    .fg select option { background: var(--dark-3); color: var(--white); }
+    .fg textarea { resize: vertical; min-height: 90px; line-height: 1.6; }
+    .sw { position: relative; }
+    .sw::after { content: '▾'; position: absolute; right: 13px; top: 50%; transform: translateY(-50%); color: var(--gold); font-size: 11px; pointer-events: none; }
+    .fg input:valid:not(:placeholder-shown) { border-color: rgba(100,180,100,0.3); }
+    .fg input:invalid:not(:placeholder-shown) { border-color: rgba(200,80,80,0.4); }
+
+    /* ══════════════════════════════════════════
+       STEP 3 — PAYMENT
+    ══════════════════════════════════════════ */
+    .payment-opts { display: flex; flex-direction: column; gap: 12px; margin-bottom: 24px; }
+    .payment-opt {
+      display: flex; align-items: flex-start; gap: 16px;
+      padding: 18px 20px;
+      border: 1px solid rgba(255,255,255,0.07);
+      cursor: pointer; transition: border-color var(--transition);
+      background: var(--dark-2);
+    }
+    .payment-opt:has(input:checked) { border-color: rgba(201,168,76,0.5); background: rgba(201,168,76,0.04); }
+    .payment-opt-radio { margin-top: 2px; flex-shrink: 0; }
+    .payment-opt-radio input[type="radio"] { width: 16px; height: 16px; accent-color: var(--gold); cursor: pointer; }
+    .payment-opt-icon {
+      width: 36px; height: 36px; border-radius: 50%;
+      border: 1px solid rgba(201,168,76,0.2);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .payment-opt-icon svg { width: 16px; height: 16px; stroke: var(--gold); fill: none; stroke-width: 1.5; }
+    .payment-opt-label { font-size: 13px; color: var(--white); font-weight: 400; margin-bottom: 4px; }
+    .payment-opt-desc { font-size: 11px; color: var(--muted); line-height: 1.6; }
+
+    .review-table { width: 100%; border-collapse: collapse; margin: 16px 0 24px; }
+    .review-table td { padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.04); font-size: 13px; vertical-align: top; }
+    .review-table td:first-child { color: var(--muted); width: 40%; }
+    .review-table td:last-child { color: var(--white); }
+    .review-table tr:last-child td { border-bottom: none; }
+
+    /* ══════════════════════════════════════════
+       STEP 4 — CONFIRMATION
+    ══════════════════════════════════════════ */
+    .confirm-panel {
+      text-align: center;
+      padding: 48px 40px 60px;
+      background: var(--dark-2);
+      border: 1px solid rgba(100,180,100,0.2);
+    }
+    .confirm-icon {
+      width: 72px; height: 72px; border-radius: 50%;
+      border: 1px solid rgba(100,180,100,0.45);
+      margin: 0 auto 24px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .confirm-icon svg { width: 30px; height: 30px; stroke: #90d090; fill: none; stroke-width: 2; }
+    .confirm-title { font-family: var(--serif); font-size: 36px; font-weight: 300; color: var(--white); margin-bottom: 14px; }
+    .confirm-text { font-size: 14px; color: var(--muted); line-height: 1.9; max-width: 520px; margin: 0 auto 10px; }
+    .confirm-ref { font-size: 11px; color: var(--gold); letter-spacing: 0.14em; margin: 18px 0 30px; }
+    .confirm-detail {
+      display: inline-grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2px; text-align: left; margin: 0 auto 32px;
+      border: 1px solid rgba(201,168,76,0.1);
+      max-width: 460px; width: 100%;
+    }
+    .cd-cell {
+      padding: 14px 18px; background: var(--dark-3);
+    }
+    .cd-label { font-size: 8px; letter-spacing: 0.2em; color: var(--gold); text-transform: uppercase; margin-bottom: 4px; }
+    .cd-val { font-size: 13px; color: var(--white); }
+    .confirm-actions { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+
+    /* ══════════════════════════════════════════
+       RESPONSIVE
+    ══════════════════════════════════════════ */
+    @media (max-width: 960px) {
+      .checkout-layout { grid-template-columns: 1fr; }
+      .order-sidebar { position: static; }
+      .cart-items-hdr { display: none; }
+      .cart-item { grid-template-columns: 1fr auto auto; gap: 10px; }
+      .ci-info { grid-column: 1 / -1; }
+      .form-row-2 { grid-template-columns: 1fr; }
+      .progress-line { width: 40px; }
+    }
+    @media (max-width: 520px) {
+      .progress-line { width: 20px; }
+      .confirm-detail { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <div class="container">
+      <div class="nav-left">
+        <div class="nav-links">
+          <a href="index.html">Home</a>
+          <a href="about.html">About Us</a>
+        </div>
+      </div>
+      <a href="index.html" class="nav-logo">
+        <span class="nav-logo-main">BISHOP &amp; CO.</span>
+        <span class="nav-logo-sub">Luxury Timepieces</span>
+      </a>
+      <div class="nav-right">
+        <div class="nav-links">
+          <a href="collections.html">Collections</a>
+          <a href="gallery.html">Gallery</a>
+          <a href="contact.html">Contact</a>
+        </div>
+        <a href="cart.html" class="nav-cart" style="color:var(--gold);">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+          <span class="nav-cart-badge" id="cart-count"></span>
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- CHECKOUT PROGRESS -->
+  <div class="checkout-progress">
+    <div class="container">
+      <div class="progress-inner">
+        <div class="progress-step active" id="ps-1">
+          <div class="progress-step-num" id="pn-1">1</div>
+          <div class="progress-step-label">Cart</div>
+        </div>
+        <div class="progress-line" id="pl-1"></div>
+        <div class="progress-step" id="ps-2">
+          <div class="progress-step-num" id="pn-2">2</div>
+          <div class="progress-step-label">Details</div>
+        </div>
+        <div class="progress-line" id="pl-2"></div>
+        <div class="progress-step" id="ps-3">
+          <div class="progress-step-num" id="pn-3">3</div>
+          <div class="progress-step-label">Payment</div>
+        </div>
+        <div class="progress-line" id="pl-3"></div>
+        <div class="progress-step" id="ps-4">
+          <div class="progress-step-num" id="pn-4">4</div>
+          <div class="progress-step-label">Confirmation</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <section>
+    <div class="container">
+      <div class="checkout-layout" id="checkout-wrap">
+
+        <!-- LEFT: step panels -->
+        <div class="checkout-main">
+
+          <!-- ─── STEP 1: CART ─── -->
+          <div class="step-panel active" id="step-1">
+            <div class="step-head">
+              <span class="step-head-tag">Step 1 of 3</span>
+              <div class="step-head-title">Your Cart</div>
+            </div>
+            <div id="cart-items-area"></div>
+          </div>
+
+          <!-- ─── STEP 2: DETAILS ─── -->
+          <div class="step-panel" id="step-2">
+            <div class="step-head">
+              <span class="step-head-tag">Step 2 of 3</span>
+              <div class="step-head-title">Your Details</div>
+            </div>
+            <form id="details-form" novalidate>
+              <div class="form-section-label">Personal Information</div>
+              <div class="form-row-2">
+                <div class="fg"><label>First Name *</label><input type="text" id="d-fname" name="fname" placeholder="e.g. John" required minlength="2"></div>
+                <div class="fg"><label>Last Name *</label><input type="text" id="d-lname" name="lname" placeholder="e.g. Moeti" required minlength="2"></div>
+              </div>
+              <div class="form-row-2">
+                <div class="fg"><label>Email Address *</label><input type="email" id="d-email" name="email" placeholder="john@example.com" required></div>
+                <div class="fg"><label>Phone Number *</label><input type="tel" id="d-phone" name="phone" placeholder="+267 7X XXX XXX" required pattern="[\+0-9\s\-]{7,15}"></div>
+              </div>
+              <div class="form-section-label">Delivery Preference</div>
+              <div class="form-row-2">
+                <div class="fg">
+                  <label>Delivery Method *</label>
+                  <div class="sw">
+                    <select id="d-delivery" name="delivery" required>
+                      <option value="" disabled selected>— Select —</option>
+                      <option value="instore">Collect In-Store (Free)</option>
+                      <option value="local">Local Delivery – Gaborone (BWP 200)</option>
+                      <option value="national">National Delivery – Botswana (BWP 500)</option>
+                      <option value="international">International Arrangement</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="fg"><label>City / Town</label><input type="text" id="d-city" name="city" placeholder="e.g. Gaborone"></div>
+              </div>
+              <div class="fg"><label>Delivery Address</label><textarea id="d-address" name="address" placeholder="Street address, area, or additional delivery notes..."></textarea></div>
+              <div class="cart-foot">
+                <button type="button" class="btn-back-link" onclick="goStep(1)">← Back to Cart</button>
+                <button type="submit" class="btn-next">Continue to Payment →</button>
+              </div>
+            </form>
+          </div>
+
+          <!-- ─── STEP 3: PAYMENT ─── -->
+          <div class="step-panel" id="step-3">
+            <div class="step-head">
+              <span class="step-head-tag">Step 3 of 3</span>
+              <div class="step-head-title">Payment Method</div>
+            </div>
+
+            <!-- Order review mini-table -->
+            <div class="form-section-label">Order Review</div>
+            <table class="review-table" id="review-table"></table>
+
+            <div class="form-section-label">Choose Payment</div>
+            <form id="payment-form" novalidate>
+              <div class="payment-opts">
+                <label class="payment-opt">
+                  <div class="payment-opt-radio"><input type="radio" name="payment" value="instore" required></div>
+                  <div class="payment-opt-icon"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>
+                  <div>
+                    <div class="payment-opt-label">In-Store Payment</div>
+                    <div class="payment-opt-desc">Visit our boutique at Main Mall, Gaborone. Pay by cash, card, or EFT at point of collection.</div>
+                  </div>
+                </label>
+                <label class="payment-opt">
+                  <div class="payment-opt-radio"><input type="radio" name="payment" value="eft"></div>
+                  <div class="payment-opt-icon"><svg viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg></div>
+                  <div>
+                    <div class="payment-opt-label">Bank Transfer (EFT)</div>
+                    <div class="payment-opt-desc">Our banking details will be emailed to you upon order confirmation. Payment due within 48 hours.</div>
+                  </div>
+                </label>
+                <label class="payment-opt">
+                  <div class="payment-opt-radio"><input type="radio" name="payment" value="mobile"></div>
+                  <div class="payment-opt-icon"><svg viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg></div>
+                  <div>
+                    <div class="payment-opt-label">Mobile Money</div>
+                    <div class="payment-opt-desc">Pay via Orange Money or Mascom MyZaka. Our team will send a payment request after confirmation.</div>
+                  </div>
+                </label>
+                <label class="payment-opt">
+                  <div class="payment-opt-radio"><input type="radio" name="payment" value="arrangement"></div>
+                  <div class="payment-opt-icon"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg></div>
+                  <div>
+                    <div class="payment-opt-label">By Arrangement</div>
+                    <div class="payment-opt-desc">Installment plan, international wire transfer, or other arrangements. A consultant will contact you.</div>
+                  </div>
+                </label>
+              </div>
+              <div class="fg"><label>Additional Notes</label><textarea name="notes" placeholder="Special requests, gift wrapping, engraving, or any other instructions..."></textarea></div>
+              <div class="cart-foot">
+                <button type="button" class="btn-back-link" onclick="goStep(2)">← Back to Details</button>
+                <button type="submit" class="btn-next" id="place-btn">Place Order →</button>
+              </div>
+            </form>
+          </div>
+
+          <!-- ─── STEP 4: CONFIRMATION ─── -->
+          <div class="step-panel" id="step-4">
+            <div class="confirm-panel">
+              <div class="confirm-icon"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg></div>
+              <div class="confirm-title">Order Confirmed!</div>
+              <p class="confirm-text">Thank you for your order. A member of the Bishop &amp; Co. team will contact you within 24 hours to confirm your purchase and arrange your chosen payment method.</p>
+              <div class="confirm-ref" id="conf-ref"></div>
+              <div class="confirm-detail" id="conf-detail"></div>
+              <div class="confirm-actions">
+                <a href="collections.html" class="btn btn-filled">Continue Shopping</a>
+                <a href="contact.html" class="btn">Contact Us</a>
+              </div>
+            </div>
+          </div>
+
+        </div><!-- /checkout-main -->
+
+        <!-- RIGHT: Order summary sidebar -->
+        <div class="order-sidebar" id="order-sidebar">
+          <div class="sidebar-title">Order Summary</div>
+          <div class="sidebar-items" id="sidebar-items"></div>
+          <div id="sidebar-totals"></div>
+          <p class="sidebar-note">All prices in Botswana Pula (BWP). Authentication included on every piece.</p>
+          <div class="sidebar-secure">
+            <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            Authenticated &amp; Guaranteed
+          </div>
+        </div>
+
+      </div><!-- /checkout-layout -->
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-col">
+          <div class="footer-brand-name">BISHOP &amp; CO.</div>
+          <div class="footer-brand-sub">Luxury Timepieces</div>
+          <p class="footer-desc">A premium luxury watch boutique based in Gaborone, Botswana — curating the world's finest timepieces for discerning collectors.</p>
+        </div>
+        <div class="footer-col">
+          <div class="footer-col-title">Navigate</div>
+          <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="about.html">About Us</a></li>
+            <li><a href="collections.html">Collections</a></li>
+            <li><a href="gallery.html">Gallery</a></li>
+            <li><a href="contact.html">Contact</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <div class="footer-col-title">Contact</div>
+          <ul>
+            <li><a href="#">Main Mall, Gaborone</a></li>
+            <li><a href="tel:+26731234567">+267 3XX XXXX</a></li>
+            <li><a href="mailto:info@bishopcobw.com">info@bishopcobw.com</a></li>
+            <li><a href="#">Mon–Sat: 09:00–18:00</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <div class="footer-col-title">Follow Us</div>
+          <ul>
+            <li><a href="#">Instagram</a></li>
+            <li><a href="#">Facebook</a></li>
+            <li><a href="#">LinkedIn</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span class="footer-copy">&copy; 2026 Bishop &amp; Co. Luxury Timepieces. All rights reserved.</span>
+        <div class="footer-social">
+          <a href="#">Instagram</a>
+          <a href="#">Facebook</a>
+          <a href="#">LinkedIn</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="cart.js"></script>
+  <script>
+    /* ── helpers ── */
+    function fmt(n) { return 'BWP\u00a0' + n.toLocaleString('en-ZA'); }
+    var currentStep = 1;
+    var orderDetails = {};
+
+    /* ── step navigation ── */
+    function goStep(n) {
+      document.querySelectorAll('.step-panel').forEach(function(p) { p.classList.remove('active'); });
+      document.getElementById('step-' + n).classList.add('active');
+      currentStep = n;
+      updateProgress(n);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function updateProgress(n) {
+      [1,2,3,4].forEach(function(i) {
+        var ps = document.getElementById('ps-' + i);
+        var pn = document.getElementById('pn-' + i);
+        ps.classList.remove('active','done');
+        if (i < n)  { ps.classList.add('done');   pn.innerHTML = '&#10003;'; }
+        if (i === n){ ps.classList.add('active');  pn.textContent = i; }
+        if (i > n)  {                              pn.textContent = i; }
+      });
+      [1,2,3].forEach(function(i) {
+        var pl = document.getElementById('pl-' + i);
+        if (pl) { pl.classList.toggle('done', i < n); }
+      });
+    }
+
+    /* ── sidebar ── */
+    function renderSidebar() {
+      var cart = getCart();
+      var total = getCartTotal();
+      var sItems = document.getElementById('sidebar-items');
+      var sTotals = document.getElementById('sidebar-totals');
+      if (!cart.length) { sItems.innerHTML = '<p style="font-size:12px;color:var(--muted);">No items yet.</p>'; sTotals.innerHTML = ''; return; }
+      sItems.innerHTML = cart.map(function(item) {
+        var thumb = item.img
+          ? '<img src="' + item.img + '" alt="' + item.name + '">'
+          : '<div class="sidebar-thumb-ph"></div>';
+        return '<div class="sidebar-item">' +
+          '<div class="sidebar-thumb">' + thumb + '</div>' +
+          '<div class="sidebar-item-info">' +
+            '<div class="sidebar-item-brand">' + item.brand + '</div>' +
+            '<div class="sidebar-item-name">' + item.name + '</div>' +
+            '<div class="sidebar-item-qty">Qty: ' + (item.qty||1) + '</div>' +
+          '</div>' +
+          '<div class="sidebar-item-price">' + fmt(item.price * (item.qty||1)) + '</div>' +
+        '</div>';
+      }).join('');
+      sTotals.innerHTML =
+        '<div class="sidebar-row"><span>Subtotal</span><span>' + fmt(total) + '</span></div>' +
+        '<div class="sidebar-row"><span>Authentication</span><span>Included</span></div>' +
+        '<div class="sidebar-row total"><span>Total</span><span class="s-val">' + fmt(total) + '</span></div>';
+    }
+
+    /* ── step 1: cart ── */
+    function renderCartStep() {
+      var cart = getCart();
+      var area = document.getElementById('cart-items-area');
+      if (!cart.length) {
+        area.innerHTML =
+          '<div class="empty-cart">' +
+            '<div class="empty-icon"><svg viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg></div>' +
+            '<div class="empty-title">Your cart is empty</div>' +
+            '<p class="empty-text">Discover our curated collection of luxury timepieces.</p>' +
+            '<a href="collections.html" class="btn btn-filled">Explore Collections</a>' +
+          '</div>';
+        document.getElementById('order-sidebar').style.display = 'none';
+        return;
+      }
+      document.getElementById('order-sidebar').style.display = '';
+      var rows = '<div class="cart-items-hdr"><span>Timepiece</span><span>Price</span><span>Quantity</span><span></span></div>';
+      cart.forEach(function(item) {
+        var thumb = item.img
+          ? '<img src="' + item.img + '" alt="' + item.name + '">'
+          : '<div class="ci-thumb-ph"></div>';
+        rows +=
+          '<div class="cart-item">' +
+            '<div class="ci-info">' +
+              '<div class="ci-thumb">' + thumb + '</div>' +
+              '<div><div class="ci-brand">' + item.brand + '</div><div class="ci-name">' + item.name + '</div></div>' +
+            '</div>' +
+            '<div class="ci-price">' + fmt(item.price) + '</div>' +
+            '<div class="ci-qty">' +
+              '<button class="qty-btn" onclick="changeQty(\'' + item.id + '\',-1)">\u2212</button>' +
+              '<span class="qty-num">' + (item.qty||1) + '</span>' +
+              '<button class="qty-btn" onclick="changeQty(\'' + item.id + '\',1)">+</button>' +
+            '</div>' +
+            '<button class="ci-remove" onclick="removeItem(\'' + item.id + '\')" title="Remove">&times;</button>' +
+          '</div>';
+      });
+      rows +=
+        '<div class="cart-foot">' +
+          '<div style="display:flex;gap:12px;flex-wrap:wrap;">' +
+            '<a href="collections.html" class="btn">Continue Shopping</a>' +
+            '<button class="btn" style="color:var(--mid);border-color:rgba(255,255,255,0.1);" onclick="if(confirm(\'Clear all items from cart?\')){clearCart();renderCartStep();renderSidebar();}">Clear Cart</button>' +
+          '</div>' +
+          '<button class="btn-next" onclick="goStep(2)">Proceed to Checkout \u2192</button>' +
+        '</div>';
+      area.innerHTML = rows;
+    }
+
+    /* ── qty / remove ── */
+    function changeQty(id, delta) {
+      var cart = getCart();
+      var item = cart.find(function(i){ return i.id === id; });
+      if (item) { item.qty = Math.max(1, (item.qty||1) + delta); saveCart(cart); }
+      renderCartStep(); renderSidebar();
+    }
+    function removeItem(id) { removeFromCart(id); renderCartStep(); renderSidebar(); }
+
+    /* ── step 2 submit ── */
+    document.getElementById('details-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      if (!e.target.checkValidity()) { e.target.reportValidity(); return; }
+      orderDetails.fname    = document.getElementById('d-fname').value;
+      orderDetails.lname    = document.getElementById('d-lname').value;
+      orderDetails.email    = document.getElementById('d-email').value;
+      orderDetails.phone    = document.getElementById('d-phone').value;
+      orderDetails.delivery = document.getElementById('d-delivery').options[document.getElementById('d-delivery').selectedIndex].text;
+      orderDetails.city     = document.getElementById('d-city').value;
+      orderDetails.address  = document.getElementById('d-address').value;
+      buildReviewTable();
+      goStep(3);
+    });
+
+    /* ── review table for step 3 ── */
+    function buildReviewTable() {
+      var t = document.getElementById('review-table');
+      t.innerHTML =
+        '<tr><td>Name</td><td>' + orderDetails.fname + ' ' + orderDetails.lname + '</td></tr>' +
+        '<tr><td>Email</td><td>' + orderDetails.email + '</td></tr>' +
+        '<tr><td>Phone</td><td>' + orderDetails.phone + '</td></tr>' +
+        '<tr><td>Delivery</td><td>' + orderDetails.delivery + '</td></tr>' +
+        (orderDetails.city ? '<tr><td>City</td><td>' + orderDetails.city + '</td></tr>' : '') +
+        '<tr><td>Order Total</td><td style="color:var(--gold);font-family:var(--serif);font-size:17px;">' + fmt(getCartTotal()) + '</td></tr>';
+    }
+
+    /* ── step 3 submit ── */
+    document.getElementById('payment-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      if (!e.target.checkValidity()) { e.target.reportValidity(); return; }
+      var paymentInput = e.target.querySelector('input[name="payment"]:checked');
+      if (!paymentInput) { alert('Please select a payment method.'); return; }
+      orderDetails.payment = paymentInput.closest('.payment-opt').querySelector('.payment-opt-label').textContent;
+      var btn = document.getElementById('place-btn');
+      btn.textContent = 'Processing\u2026';
+      btn.disabled = true;
+      setTimeout(function() {
+        var ref = 'BC-' + Date.now().toString(36).toUpperCase().slice(-7);
+        document.getElementById('conf-ref').textContent = 'Order Reference: ' + ref;
+        document.getElementById('conf-detail').innerHTML =
+          '<div class="cd-cell"><div class="cd-label">Name</div><div class="cd-val">' + orderDetails.fname + ' ' + orderDetails.lname + '</div></div>' +
+          '<div class="cd-cell"><div class="cd-label">Email</div><div class="cd-val">' + orderDetails.email + '</div></div>' +
+          '<div class="cd-cell"><div class="cd-label">Payment</div><div class="cd-val">' + orderDetails.payment + '</div></div>' +
+          '<div class="cd-cell"><div class="cd-label">Total</div><div class="cd-val" style="color:var(--gold)">' + fmt(getCartTotal()) + '</div></div>';
+        clearCart();
+        renderSidebar();
+        document.getElementById('order-sidebar').style.display = 'none';
+        goStep(4);
+      }, 1500);
+    });
+
+    /* ── init ── */
+    renderCartStep();
+    renderSidebar();
+  </script>
+
+</body>
+</html>

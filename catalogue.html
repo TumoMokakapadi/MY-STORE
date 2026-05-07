@@ -1,0 +1,888 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Official Catalogue 2026 — Bishop &amp; Co. Luxury Timepieces</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <style>
+    /* ── Catalogue cover ── */
+    .cover {
+      padding-top: var(--nav-h);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding-bottom: 80px;
+      position: relative;
+      overflow: hidden;
+    }
+    .cover::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 60% 60% at 50% 50%, rgba(201,168,76,0.06) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .cover-ornament {
+      width: 1px; height: 60px;
+      background: linear-gradient(to bottom, transparent, var(--gold));
+      margin: 0 auto 36px;
+    }
+    .cover-tag {
+      font-size: 9px; font-weight: 500;
+      letter-spacing: 0.35em; color: var(--gold);
+      text-transform: uppercase; margin-bottom: 20px;
+    }
+    .cover-brand {
+      font-family: var(--serif);
+      font-size: clamp(48px, 8vw, 96px);
+      font-weight: 300; letter-spacing: 0.18em;
+      color: var(--white); line-height: 1; margin-bottom: 10px;
+    }
+    .cover-sub {
+      font-size: 9px; font-weight: 500;
+      letter-spacing: 0.5em; color: var(--muted);
+      text-transform: uppercase; margin-bottom: 48px;
+    }
+    .cover-divider { width: 60px; height: 1px; background: var(--gold); margin: 0 auto 36px; }
+    .cover-headline {
+      font-family: var(--serif);
+      font-size: clamp(22px, 3vw, 36px);
+      font-weight: 300; font-style: italic;
+      color: var(--white); line-height: 1.5; margin-bottom: 20px;
+    }
+    .cover-year { font-size: 10px; letter-spacing: 0.3em; color: var(--gold); text-transform: uppercase; }
+    .cover-ornament-bottom {
+      width: 1px; height: 60px;
+      background: linear-gradient(to top, transparent, var(--gold));
+      margin: 36px auto 0;
+    }
+    .cover-actions { display: flex; gap: 16px; justify-content: center; margin-top: 48px; flex-wrap: wrap; }
+
+    /* ── Floating download buttons ── */
+    .print-float {
+      position: fixed;
+      bottom: 32px; right: 32px;
+      z-index: 99;
+      display: flex; flex-direction: column; gap: 8px; align-items: flex-end;
+    }
+    .btn-print-float {
+      display: flex; align-items: center; gap: 8px;
+      font-family: var(--sans);
+      font-size: 9px; font-weight: 600;
+      letter-spacing: 0.18em; text-transform: uppercase;
+      padding: 13px 22px;
+      background: var(--dark-2);
+      border: 1px solid rgba(201,168,76,0.4);
+      color: var(--gold); cursor: pointer;
+      transition: all var(--transition);
+      box-shadow: 0 4px 24px rgba(0,0,0,0.4);
+    }
+    .btn-print-float:hover { background: var(--gold); color: var(--dark); border-color: var(--gold); }
+    .btn-print-float:disabled { opacity: 0.55; cursor: not-allowed; }
+    .btn-print-float svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 1.8; }
+    .btn-print-float.secondary {
+      background: transparent;
+      border-color: rgba(255,255,255,0.1);
+      color: var(--muted);
+      padding: 9px 18px;
+      font-size: 8px;
+      box-shadow: none;
+    }
+    .btn-print-float.secondary:hover { background: transparent; border-color: rgba(201,168,76,0.3); color: var(--gold); }
+
+    /* ── Category filter ── */
+    .cat-filter {
+      background: var(--dark-2);
+      border-bottom: 1px solid rgba(201,168,76,0.12);
+      padding: 20px 0;
+      position: sticky;
+      top: var(--nav-h);
+      z-index: 50;
+    }
+    .cat-filter-inner {
+      max-width: 1000px; margin: 0 auto; padding: 0 40px;
+      display: flex; gap: 10px; flex-wrap: wrap; align-items: center;
+    }
+    .cat-filter-label {
+      font-size: 9px; font-weight: 500;
+      letter-spacing: 0.2em; color: var(--muted);
+      text-transform: uppercase; margin-right: 8px;
+    }
+    .cat-filter-btn {
+      font-size: 9px; font-weight: 500;
+      letter-spacing: 0.14em; text-transform: uppercase;
+      padding: 7px 16px;
+      border: 1px solid rgba(255,255,255,0.1);
+      color: var(--muted); background: transparent;
+      cursor: pointer; transition: all var(--transition);
+    }
+    .cat-filter-btn:hover { border-color: rgba(201,168,76,0.4); color: var(--gold); }
+    .cat-filter-btn.active { background: var(--gold); border-color: var(--gold); color: var(--dark); }
+
+    /* ── Catalogue wrap ── */
+    .catalogue-wrap { max-width: 1000px; margin: 0 auto; padding: 0 40px 100px; }
+
+    /* ── Category header ── */
+    .cat-header {
+      padding: 72px 0 28px;
+      border-bottom: 1px solid rgba(201,168,76,0.15);
+      margin-bottom: 48px;
+      display: flex; align-items: flex-end;
+      justify-content: space-between;
+    }
+    .cat-num {
+      font-size: 9px; font-weight: 500;
+      letter-spacing: 0.3em; color: var(--gold);
+      text-transform: uppercase; display: block; margin-bottom: 6px;
+    }
+    .cat-title {
+      font-family: var(--serif);
+      font-size: clamp(26px, 3.5vw, 40px);
+      font-weight: 300; color: var(--white);
+    }
+    .cat-count { font-size: 11px; color: var(--muted); letter-spacing: 0.1em; }
+
+    /* ── Watch entry ── */
+    .watch-entry {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 48px;
+      align-items: start;
+      padding: 48px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      transition: border-color var(--transition);
+    }
+    .watch-entry:hover { border-color: rgba(201,168,76,0.2); }
+    .watch-entry:last-child { border-bottom: none; }
+    .watch-entry.reverse { direction: rtl; }
+    .watch-entry.reverse > * { direction: ltr; }
+
+    .watch-img {
+      height: 260px;
+      background: var(--dark-3);
+      border: 1px solid rgba(201,168,76,0.1);
+      overflow: hidden;
+      position: relative;
+      cursor: pointer;
+      transition: border-color var(--transition);
+    }
+    .watch-img:hover { border-color: rgba(201,168,76,0.4); }
+    .watch-img img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
+    .watch-img:hover img { transform: scale(1.04); }
+    .watch-img-placeholder {
+      width: 100%; height: 100%;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .watch-img-placeholder-inner {
+      width: 90px; height: 90px; border-radius: 50%;
+      border: 1px solid rgba(201,168,76,0.2);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .watch-img-placeholder-inner::after {
+      content: ''; width: 56px; height: 56px;
+      border-radius: 50%; border: 1px solid rgba(201,168,76,0.1);
+    }
+    .watch-img-zoom {
+      position: absolute; bottom: 10px; right: 10px;
+      background: rgba(14,14,14,0.75);
+      border: 1px solid rgba(201,168,76,0.25);
+      color: var(--gold); font-size: 9px;
+      letter-spacing: 0.15em; text-transform: uppercase;
+      padding: 5px 10px; opacity: 0;
+      transition: opacity var(--transition);
+    }
+    .watch-img:hover .watch-img-zoom { opacity: 1; }
+
+    .watch-brand {
+      font-size: 9px; font-weight: 600;
+      letter-spacing: 0.25em; color: var(--gold);
+      text-transform: uppercase; margin-bottom: 6px;
+    }
+    .watch-name {
+      font-family: var(--serif);
+      font-size: clamp(22px, 2.5vw, 30px);
+      font-weight: 300; color: var(--white);
+      line-height: 1.2; margin-bottom: 14px;
+    }
+    .watch-divider { width: 36px; height: 1px; background: var(--gold); margin-bottom: 16px; }
+    .watch-desc { font-size: 13px; color: var(--muted); line-height: 1.85; margin-bottom: 22px; }
+    .watch-meta { display: flex; gap: 28px; flex-wrap: wrap; margin-bottom: 24px; }
+    .watch-meta-label {
+      font-size: 8px; font-weight: 600;
+      letter-spacing: 0.2em; color: var(--muted);
+      text-transform: uppercase; display: block; margin-bottom: 3px;
+    }
+    .watch-meta-value { font-size: 12px; color: var(--white); font-weight: 400; }
+    .watch-price-display {
+      padding: 18px 0 0;
+      border-top: 1px solid rgba(201,168,76,0.1);
+      display: flex; align-items: center;
+      justify-content: space-between; margin-bottom: 16px;
+    }
+    .watch-price-label { font-size: 9px; letter-spacing: 0.2em; color: var(--muted); text-transform: uppercase; }
+    .watch-price-val {
+      font-family: var(--serif); font-size: 26px;
+      font-weight: 300; color: var(--gold);
+    }
+    .watch-entry-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+    .btn-cat-enquire {
+      font-size: 9px; font-weight: 500;
+      letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--gold); border: 1px solid rgba(201,168,76,0.4);
+      padding: 9px 20px; display: inline-block;
+      transition: background var(--transition), color var(--transition), border-color var(--transition);
+      cursor: pointer; background: transparent; font-family: var(--sans);
+    }
+    .btn-cat-enquire:hover { background: var(--gold); color: var(--dark); border-color: var(--gold); }
+    .btn-cat-add {
+      font-size: 9px; font-weight: 500;
+      letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--dark); border: 1px solid var(--gold);
+      padding: 9px 20px; display: inline-block;
+      background: var(--gold); cursor: pointer;
+      transition: background var(--transition), border-color var(--transition);
+      font-family: var(--sans);
+    }
+    .btn-cat-add:hover { background: var(--gold-light); border-color: var(--gold-light); }
+    .btn-cat-add.added { background: #4a8a4a; border-color: #4a8a4a; color: #fff; }
+
+    /* ── Corporate section ── */
+    .corporate-section {
+      margin-top: 80px; padding: 60px;
+      background: var(--dark-3);
+      border: 1px solid rgba(201,168,76,0.15);
+      text-align: center;
+    }
+    .corporate-section p { font-size: 13px; color: var(--muted); line-height: 1.9; max-width: 640px; margin: 0 auto 14px; }
+
+    /* ── Back cover ── */
+    .back-cover {
+      padding: 80px 40px 100px;
+      text-align: center;
+      border-top: 1px solid rgba(201,168,76,0.15);
+    }
+    .contact-row {
+      display: flex; justify-content: center;
+      gap: 48px; margin-top: 36px; flex-wrap: wrap;
+    }
+    .contact-item-label {
+      font-size: 8px; letter-spacing: 0.25em;
+      color: var(--gold); text-transform: uppercase;
+      display: block; margin-bottom: 4px;
+    }
+    .contact-item-val { font-size: 13px; color: var(--white); }
+
+    /* ── Lightbox ── */
+    .lb {
+      display: none; position: fixed; inset: 0;
+      background: rgba(0,0,0,0.93); z-index: 300;
+      align-items: center; justify-content: center;
+    }
+    .lb.open { display: flex; }
+    .lb-content {
+      max-width: 700px; width: 92%;
+      background: var(--dark-2);
+      border: 1px solid rgba(201,168,76,0.2);
+      position: relative; overflow: hidden;
+    }
+    .lb-img { width: 100%; height: 420px; overflow: hidden; }
+    .lb-img img { width: 100%; height: 100%; object-fit: cover; }
+    .lb-body { padding: 24px 28px; }
+    .lb-brand { font-size: 9px; font-weight: 600; letter-spacing: 0.22em; color: var(--gold); text-transform: uppercase; margin-bottom: 4px; }
+    .lb-name { font-family: var(--serif); font-size: 24px; font-weight: 300; color: var(--white); }
+    .lb-close {
+      position: absolute; top: 14px; right: 18px;
+      font-size: 22px; color: var(--muted);
+      cursor: pointer; background: none; border: none;
+      line-height: 1; transition: color var(--transition);
+    }
+    .lb-close:hover { color: var(--gold); }
+
+    /* ── Notification toast ── */
+    .cart-toast {
+      position: fixed; bottom: 90px; left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: var(--dark-2); border: 1px solid rgba(201,168,76,0.3);
+      padding: 12px 24px; font-size: 12px; color: var(--white);
+      opacity: 0; transition: all 0.35s; z-index: 200;
+      white-space: nowrap; pointer-events: none;
+    }
+    .cart-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+    .cart-toast span { color: var(--gold); }
+
+    /* ── Print styles ── */
+    @media print {
+      @page { margin: 15mm 18mm; size: A4; }
+      body { background: #fff !important; color: #111 !important; }
+      nav, .cat-filter, .print-float, .lb, .cart-toast,
+      .watch-entry-actions, .cover-actions { display: none !important; }
+      .cover { min-height: 0; page-break-after: always; background: #fff; }
+      .cover::before { display: none; }
+      .watch-entry { page-break-inside: avoid; direction: ltr !important; }
+      .watch-entry.reverse { direction: ltr !important; }
+      .watch-img-zoom { display: none; }
+      * { color: #111 !important; }
+      .cover-brand, .cat-title, .watch-name { color: #111 !important; }
+      .cover-tag, .cat-num, .watch-brand, .watch-price-val,
+      .cover-year, .contact-item-label { color: #8a6a20 !important; }
+      .cover-sub, .watch-desc, .cat-count, .watch-meta-value,
+      .contact-item-val, .corporate-section p { color: #555 !important; }
+      .cover-divider, .watch-divider { background: #c9a84c !important; }
+      .cat-header { border-color: #ddd; }
+      .watch-price-display { border-color: #ddd; }
+      .watch-entry { border-color: #eee; }
+      .watch-img { background: #f5f5f5 !important; border-color: #ddd; }
+      .corporate-section { background: #f9f9f9 !important; border-color: #ddd; }
+    }
+
+    @media (max-width: 800px) {
+      .watch-entry, .watch-entry.reverse { grid-template-columns: 1fr; direction: ltr; }
+      .cat-header { flex-direction: column; align-items: flex-start; gap: 8px; }
+      .catalogue-wrap { padding: 0 24px 100px; }
+      .cat-filter-inner { padding: 0 24px; }
+      .print-float { bottom: 20px; right: 20px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <div class="container">
+      <div class="nav-left">
+        <div class="nav-links">
+          <a href="index.html">Home</a>
+          <a href="about.html">About Us</a>
+        </div>
+      </div>
+      <a href="index.html" class="nav-logo">
+        <span class="nav-logo-main">BISHOP &amp; CO.</span>
+        <span class="nav-logo-sub">Luxury Timepieces</span>
+      </a>
+      <div class="nav-right">
+        <div class="nav-links">
+          <a href="collections.html">Collections</a>
+          <a href="gallery.html">Gallery</a>
+          <a href="contact.html">Contact</a>
+        </div>
+        <a href="cart.html" class="nav-cart">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+          <span class="nav-cart-badge" id="cart-count"></span>
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- FLOATING DOWNLOAD BUTTONS -->
+  <div class="print-float">
+    <button class="btn-print-float" id="dl-pdf-btn" onclick="downloadPDF()">
+      <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      Download PDF
+    </button>
+    <button class="btn-print-float secondary" onclick="window.print()">
+      <svg viewBox="0 0 24 24"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+      Print
+    </button>
+  </div>
+
+  <!-- COVER -->
+  <div class="cover">
+    <div class="cover-ornament"></div>
+    <div class="cover-tag">Official Product Catalogue · 2026 Edition</div>
+    <div class="cover-brand">BISHOP &amp; CO.</div>
+    <div class="cover-sub">Luxury Timepieces &nbsp;·&nbsp; Gaborone, Botswana</div>
+    <div class="cover-divider"></div>
+    <div class="cover-headline">Curating the World's Finest<br>Timepieces for the Discerning Collector</div>
+    <div class="cover-year">Eleven Exceptional Timepieces &nbsp;·&nbsp; 2026</div>
+    <div class="cover-actions">
+      <a href="#cat-content" class="btn btn-filled">Browse Catalogue</a>
+      <a href="collections.html" class="btn">Shop Online</a>
+    </div>
+    <div class="cover-ornament-bottom"></div>
+  </div>
+
+  <!-- CATEGORY FILTER -->
+  <div class="cat-filter" id="cat-content">
+    <div class="cat-filter-inner">
+      <span class="cat-filter-label">Jump to:</span>
+      <button class="cat-filter-btn active" onclick="filterCat('all',this)">All</button>
+      <button class="cat-filter-btn" onclick="filterCat('classic',this)">Classic &amp; Dress</button>
+      <button class="cat-filter-btn" onclick="filterCat('sports',this)">Sports &amp; Diver</button>
+      <button class="cat-filter-btn" onclick="filterCat('chrono',this)">Chronographs</button>
+      <button class="cat-filter-btn" onclick="filterCat('limited',this)">Limited Editions</button>
+      <button class="cat-filter-btn" onclick="filterCat('corporate',this)">Corporate</button>
+    </div>
+  </div>
+
+  <!-- CATALOGUE CONTENT -->
+  <div class="catalogue-wrap">
+
+    <!-- ── CATEGORY 01 ── -->
+    <div id="sec-classic">
+      <div class="cat-header">
+        <div><span class="cat-num">Category 01</span><div class="cat-title">Classic &amp; Dress Watches</div></div>
+        <span class="cat-count">3 Timepieces</span>
+      </div>
+
+      <div class="watch-entry" data-id="patek-calatrava-5196" data-name="Calatrava 5196" data-brand="Patek Philippe" data-price="350000" data-img="images/number%201.webp">
+        <div class="watch-img" onclick="openLb(this)">
+          <img src="images/number%201.webp" alt="Patek Philippe Calatrava 5196">
+          <span class="watch-img-zoom">View</span>
+        </div>
+        <div>
+          <div class="watch-brand">Patek Philippe</div>
+          <div class="watch-name">Calatrava 5196</div>
+          <div class="watch-divider"></div>
+          <p class="watch-desc">The quintessential dress watch — an icon of understated elegance produced since 1932. The 5196 features a slim white gold case, Breguet numerals, and a manual-winding calibre that speaks to centuries of Swiss horological mastery. A timepiece worn by statesmen and collectors alike.</p>
+          <div class="watch-meta">
+            <div><span class="watch-meta-label">Movement</span><span class="watch-meta-value">Manual-winding</span></div>
+            <div><span class="watch-meta-label">Case</span><span class="watch-meta-value">White Gold, 37mm</span></div>
+            <div><span class="watch-meta-label">Water Resistance</span><span class="watch-meta-value">25m</span></div>
+          </div>
+          <div class="watch-price-display">
+            <span class="watch-price-label">Retail Price (BWP)</span>
+            <span class="watch-price-val">350,000</span>
+          </div>
+          <div class="watch-entry-actions">
+            <a href="contact.html" class="btn-cat-enquire">Enquire</a>
+            <button class="btn-cat-add" onclick="catAddToCart(this)">Add to Cart</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="watch-entry reverse" data-id="cartier-tank-must" data-name="Tank Must" data-brand="Cartier" data-price="90000" data-img="images/number%202.jpg">
+        <div class="watch-img" onclick="openLb(this)">
+          <img src="images/number%202.jpg" alt="Cartier Tank Must">
+          <span class="watch-img-zoom">View</span>
+        </div>
+        <div>
+          <div class="watch-brand">Cartier</div>
+          <div class="watch-name">Tank Must</div>
+          <div class="watch-divider"></div>
+          <p class="watch-desc">First created in 1917 and inspired by the Renault tank, the Cartier Tank is one of the most recognisable shapes in watchmaking. The Tank Must preserves this iconic rectangular profile with a modern, sustainable lens — fusing timeless French elegance with contemporary relevance.</p>
+          <div class="watch-meta">
+            <div><span class="watch-meta-label">Movement</span><span class="watch-meta-value">Quartz / Automatic</span></div>
+            <div><span class="watch-meta-label">Case</span><span class="watch-meta-value">Steel, 33.7 × 25.5mm</span></div>
+            <div><span class="watch-meta-label">Water Resistance</span><span class="watch-meta-value">30m</span></div>
+          </div>
+          <div class="watch-price-display">
+            <span class="watch-price-label">Retail Price (BWP)</span>
+            <span class="watch-price-val">90,000</span>
+          </div>
+          <div class="watch-entry-actions">
+            <a href="contact.html" class="btn-cat-enquire">Enquire</a>
+            <button class="btn-cat-add" onclick="catAddToCart(this)">Add to Cart</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="watch-entry" data-id="rolex-datejust-41" data-name="Datejust 41" data-brand="Rolex" data-price="145000" data-img="images/number%203.jpg">
+        <div class="watch-img" onclick="openLb(this)">
+          <img src="images/number%203.jpg" alt="Rolex Datejust 41">
+          <span class="watch-img-zoom">View</span>
+        </div>
+        <div>
+          <div class="watch-brand">Rolex</div>
+          <div class="watch-name">Datejust 41</div>
+          <div class="watch-divider"></div>
+          <p class="watch-desc">Since 1945 the Datejust has defined what a classic watch looks like. Equipped with Rolex's in-house Calibre 3235 automatic movement, fluted bezel, and Jubilee bracelet, the Datejust 41 epitomises the brand's philosophy of precision and permanence — a watch passed down through generations.</p>
+          <div class="watch-meta">
+            <div><span class="watch-meta-label">Movement</span><span class="watch-meta-value">Calibre 3235 Auto</span></div>
+            <div><span class="watch-meta-label">Case</span><span class="watch-meta-value">Oystersteel, 41mm</span></div>
+            <div><span class="watch-meta-label">Water Resistance</span><span class="watch-meta-value">100m</span></div>
+          </div>
+          <div class="watch-price-display">
+            <span class="watch-price-label">Retail Price (BWP)</span>
+            <span class="watch-price-val">145,000</span>
+          </div>
+          <div class="watch-entry-actions">
+            <a href="contact.html" class="btn-cat-enquire">Enquire</a>
+            <button class="btn-cat-add" onclick="catAddToCart(this)">Add to Cart</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── CATEGORY 02 ── -->
+    <div id="sec-sports">
+      <div class="cat-header">
+        <div><span class="cat-num">Category 02</span><div class="cat-title">Sports &amp; Diver Watches</div></div>
+        <span class="cat-count">3 Timepieces</span>
+      </div>
+
+      <div class="watch-entry" data-id="rolex-submariner-date" data-name="Submariner Date" data-brand="Rolex" data-price="180000" data-img="images/number%204.jpg">
+        <div class="watch-img" onclick="openLb(this)">
+          <img src="images/number%204.jpg" alt="Rolex Submariner Date">
+          <span class="watch-img-zoom">View</span>
+        </div>
+        <div>
+          <div class="watch-brand">Rolex</div>
+          <div class="watch-name">Submariner Date</div>
+          <div class="watch-divider"></div>
+          <p class="watch-desc">The most iconic sports watch ever made. Introduced in 1953, it pioneered the diver's watch category. The current generation features Calibre 3235, ceramic Cerachrom bezel, and waterproofing to 300 metres — a benchmark that every sports watch is still measured against today.</p>
+          <div class="watch-meta">
+            <div><span class="watch-meta-label">Movement</span><span class="watch-meta-value">Calibre 3235 Auto</span></div>
+            <div><span class="watch-meta-label">Case</span><span class="watch-meta-value">Oystersteel, 41mm</span></div>
+            <div><span class="watch-meta-label">Water Resistance</span><span class="watch-meta-value">300m</span></div>
+          </div>
+          <div class="watch-price-display">
+            <span class="watch-price-label">Retail Price (BWP)</span>
+            <span class="watch-price-val">180,000</span>
+          </div>
+          <div class="watch-entry-actions">
+            <a href="contact.html" class="btn-cat-enquire">Enquire</a>
+            <button class="btn-cat-add" onclick="catAddToCart(this)">Add to Cart</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="watch-entry reverse" data-id="omega-seamaster-300m" data-name="Seamaster 300M" data-brand="Omega" data-price="80000" data-img="images/number%205.jpg">
+        <div class="watch-img" onclick="openLb(this)">
+          <img src="images/number%205.jpg" alt="Omega Seamaster 300M">
+          <span class="watch-img-zoom">View</span>
+        </div>
+        <div>
+          <div class="watch-brand">Omega</div>
+          <div class="watch-name">Seamaster 300M</div>
+          <div class="watch-divider"></div>
+          <p class="watch-desc">Made famous by James Bond and worn by Olympic athletes, the Seamaster 300M is a masterclass in professional dive watch design. Its wave-pattern dial, ceramic unidirectional bezel, and Co-Axial Master Chronometer movement make it one of the most technically accomplished watches available.</p>
+          <div class="watch-meta">
+            <div><span class="watch-meta-label">Movement</span><span class="watch-meta-value">Co-Axial Master Chrono</span></div>
+            <div><span class="watch-meta-label">Case</span><span class="watch-meta-value">Steel, 42mm</span></div>
+            <div><span class="watch-meta-label">Water Resistance</span><span class="watch-meta-value">300m</span></div>
+          </div>
+          <div class="watch-price-display">
+            <span class="watch-price-label">Retail Price (BWP)</span>
+            <span class="watch-price-val">80,000</span>
+          </div>
+          <div class="watch-entry-actions">
+            <a href="contact.html" class="btn-cat-enquire">Enquire</a>
+            <button class="btn-cat-add" onclick="catAddToCart(this)">Add to Cart</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="watch-entry" data-id="cartier-santos" data-name="Santos de Cartier" data-brand="Cartier" data-price="110000" data-img="images/number%206.jpg">
+        <div class="watch-img" onclick="openLb(this)">
+          <img src="images/number%206.jpg" alt="Cartier Santos de Cartier">
+          <span class="watch-img-zoom">View</span>
+        </div>
+        <div>
+          <div class="watch-brand">Cartier</div>
+          <div class="watch-name">Santos de Cartier</div>
+          <div class="watch-divider"></div>
+          <p class="watch-desc">Created in 1904 for aviator Alberto Santos-Dumont — considered the world's first men's wristwatch. Its exposed screws, square case, and Roman numeral dial remain instantly recognisable. The current generation introduces QuickSwitch and SmartLink systems for effortless bracelet changes.</p>
+          <div class="watch-meta">
+            <div><span class="watch-meta-label">Movement</span><span class="watch-meta-value">Automatic</span></div>
+            <div><span class="watch-meta-label">Case</span><span class="watch-meta-value">Steel / Gold, 39.8mm</span></div>
+            <div><span class="watch-meta-label">Water Resistance</span><span class="watch-meta-value">100m</span></div>
+          </div>
+          <div class="watch-price-display">
+            <span class="watch-price-label">Retail Price (BWP)</span>
+            <span class="watch-price-val">110,000</span>
+          </div>
+          <div class="watch-entry-actions">
+            <a href="contact.html" class="btn-cat-enquire">Enquire</a>
+            <button class="btn-cat-add" onclick="catAddToCart(this)">Add to Cart</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── CATEGORY 03 ── -->
+    <div id="sec-chrono">
+      <div class="cat-header">
+        <div><span class="cat-num">Category 03</span><div class="cat-title">Chronographs</div></div>
+        <span class="cat-count">3 Timepieces</span>
+      </div>
+
+      <div class="watch-entry" data-id="omega-speedmaster" data-name="Speedmaster Moonwatch" data-brand="Omega" data-price="75000" data-img="images/number%207.jpg">
+        <div class="watch-img" onclick="openLb(this)">
+          <img src="images/number%207.jpg" alt="Omega Speedmaster Moonwatch">
+          <span class="watch-img-zoom">View</span>
+        </div>
+        <div>
+          <div class="watch-brand">Omega</div>
+          <div class="watch-name">Speedmaster Moonwatch</div>
+          <div class="watch-divider"></div>
+          <p class="watch-desc">On 20 July 1969 the Speedmaster became the first watch worn on the Moon. NASA-qualified through exhaustive testing, the Moonwatch Professional continues with the same manual-winding Calibre 321 movement. It is the most historically significant wristwatch ever made.</p>
+          <div class="watch-meta">
+            <div><span class="watch-meta-label">Movement</span><span class="watch-meta-value">Manual Cal. 321</span></div>
+            <div><span class="watch-meta-label">Case</span><span class="watch-meta-value">Steel, 42mm</span></div>
+            <div><span class="watch-meta-label">Water Resistance</span><span class="watch-meta-value">50m</span></div>
+          </div>
+          <div class="watch-price-display">
+            <span class="watch-price-label">Retail Price (BWP)</span>
+            <span class="watch-price-val">75,000</span>
+          </div>
+          <div class="watch-entry-actions">
+            <a href="contact.html" class="btn-cat-enquire">Enquire</a>
+            <button class="btn-cat-add" onclick="catAddToCart(this)">Add to Cart</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="watch-entry reverse" data-id="rolex-daytona" data-name="Daytona Cosmograph" data-brand="Rolex" data-price="450000" data-img="images/number%208.jpg">
+        <div class="watch-img" onclick="openLb(this)">
+          <img src="images/number%208.jpg" alt="Rolex Daytona Cosmograph">
+          <span class="watch-img-zoom">View</span>
+        </div>
+        <div>
+          <div class="watch-brand">Rolex</div>
+          <div class="watch-name">Daytona Cosmograph</div>
+          <div class="watch-divider"></div>
+          <p class="watch-desc">Named after the legendary Daytona International Speedway, the Daytona was born for racing. A tachymetric scale, three sub-dials, and the in-house Calibre 4130 make it technically superb. It is among the most coveted watches in the world with waiting lists measured in years at most dealers.</p>
+          <div class="watch-meta">
+            <div><span class="watch-meta-label">Movement</span><span class="watch-meta-value">Calibre 4130 Auto</span></div>
+            <div><span class="watch-meta-label">Case</span><span class="watch-meta-value">Oystersteel, 40mm</span></div>
+            <div><span class="watch-meta-label">Water Resistance</span><span class="watch-meta-value">100m</span></div>
+          </div>
+          <div class="watch-price-display">
+            <span class="watch-price-label">Retail Price (BWP)</span>
+            <span class="watch-price-val">450,000</span>
+          </div>
+          <div class="watch-entry-actions">
+            <a href="contact.html" class="btn-cat-enquire">Enquire</a>
+            <button class="btn-cat-add" onclick="catAddToCart(this)">Add to Cart</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="watch-entry" data-id="patek-aquanaut-5968a" data-name="Aquanaut 5968A" data-brand="Patek Philippe" data-price="600000" data-img="images/image.jpg">
+        <div class="watch-img" onclick="openLb(this)">
+          <img src="images/image.jpg" alt="Patek Philippe Aquanaut 5968A">
+          <span class="watch-img-zoom">View</span>
+        </div>
+        <div>
+          <div class="watch-brand">Patek Philippe</div>
+          <div class="watch-name">Aquanaut 5968A</div>
+          <div class="watch-divider"></div>
+          <p class="watch-desc">The Aquanaut Chronograph 5968A combines a COSC-certified chronograph movement with the sporty tropical-dial aesthetic of the Aquanaut line. Available in steel, it represents extraordinary value within Patek Philippe and commands immense collector attention on the secondary market.</p>
+          <div class="watch-meta">
+            <div><span class="watch-meta-label">Movement</span><span class="watch-meta-value">CH 28-520 C FUS Auto</span></div>
+            <div><span class="watch-meta-label">Case</span><span class="watch-meta-value">Steel, 42.2mm</span></div>
+            <div><span class="watch-meta-label">Water Resistance</span><span class="watch-meta-value">120m</span></div>
+          </div>
+          <div class="watch-price-display">
+            <span class="watch-price-label">Retail Price (BWP)</span>
+            <span class="watch-price-val">600,000</span>
+          </div>
+          <div class="watch-entry-actions">
+            <a href="contact.html" class="btn-cat-enquire">Enquire</a>
+            <button class="btn-cat-add" onclick="catAddToCart(this)">Add to Cart</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── CATEGORY 04 ── -->
+    <div id="sec-limited">
+      <div class="cat-header">
+        <div><span class="cat-num">Category 04</span><div class="cat-title">Limited Editions</div></div>
+        <span class="cat-count">2 Timepieces</span>
+      </div>
+
+      <div class="watch-entry" data-id="patek-grandmaster-chime" data-name="Grandmaster Chime" data-brand="Patek Philippe" data-price="2500000" data-img="images/number%201.webp">
+        <div class="watch-img" onclick="openLb(this)">
+          <img src="images/number%201.webp" alt="Patek Philippe Grandmaster Chime">
+          <span class="watch-img-zoom">View</span>
+        </div>
+        <div>
+          <div class="watch-brand">Patek Philippe</div>
+          <div class="watch-name">Grandmaster Chime</div>
+          <div class="watch-divider"></div>
+          <p class="watch-desc">The most complicated wristwatch Patek Philippe has ever created. Twenty complications including five chiming mechanisms, and a unique reversible case displaying two dials. Only a handful of pieces exist worldwide. To acquire one is to hold a masterpiece of human ingenuity.</p>
+          <div class="watch-meta">
+            <div><span class="watch-meta-label">Complications</span><span class="watch-meta-value">20 (inc. 5 chiming)</span></div>
+            <div><span class="watch-meta-label">Case</span><span class="watch-meta-value">Rose Gold, 47.7mm</span></div>
+            <div><span class="watch-meta-label">Availability</span><span class="watch-meta-value">Extremely Limited</span></div>
+          </div>
+          <div class="watch-price-display">
+            <span class="watch-price-label">Retail Price (BWP)</span>
+            <span class="watch-price-val">2,500,000</span>
+          </div>
+          <div class="watch-entry-actions">
+            <a href="contact.html" class="btn-cat-enquire">Enquire</a>
+            <button class="btn-cat-add" onclick="catAddToCart(this)">Add to Cart</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="watch-entry reverse" data-id="rolex-gmt-pepsi" data-name='GMT-Master II "Pepsi"' data-brand="Rolex" data-price="220000" data-img="images/number%202.jpg">
+        <div class="watch-img" onclick="openLb(this)">
+          <img src="images/number%202.jpg" alt='Rolex GMT-Master II "Pepsi"'>
+          <span class="watch-img-zoom">View</span>
+        </div>
+        <div>
+          <div class="watch-brand">Rolex</div>
+          <div class="watch-name">GMT-Master II "Pepsi"</div>
+          <div class="watch-divider"></div>
+          <p class="watch-desc">The red-and-blue "Pepsi" bezel is one of the most celebrated colour combinations in watchmaking. Originally developed for Pan Am pilots to track two time zones, the current steel 126710BLRO uses Rolex's Jubilee bracelet and Calibre 3285. Waiting lists run years at most authorised dealers.</p>
+          <div class="watch-meta">
+            <div><span class="watch-meta-label">Movement</span><span class="watch-meta-value">Calibre 3285 Auto</span></div>
+            <div><span class="watch-meta-label">Case</span><span class="watch-meta-value">Oystersteel, 40mm</span></div>
+            <div><span class="watch-meta-label">Water Resistance</span><span class="watch-meta-value">100m</span></div>
+          </div>
+          <div class="watch-price-display">
+            <span class="watch-price-label">Retail Price (BWP)</span>
+            <span class="watch-price-val">220,000</span>
+          </div>
+          <div class="watch-entry-actions">
+            <a href="contact.html" class="btn-cat-enquire">Enquire</a>
+            <button class="btn-cat-add" onclick="catAddToCart(this)">Add to Cart</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── CORPORATE ── -->
+    <div id="sec-corporate">
+      <div class="corporate-section">
+        <span class="cat-num">Category 05</span>
+        <div class="cat-title" style="font-family:var(--serif);font-size:clamp(24px,3vw,36px);font-weight:300;color:var(--white);margin:12px 0 16px;">Corporate Gifting</div>
+        <div style="width:48px;height:1px;background:var(--gold);margin:0 auto 24px;"></div>
+        <p>Bishop &amp; Co. offers a dedicated corporate gifting service for businesses seeking to reward employees, recognise achievement, or express appreciation to valued clients through the gift of a luxury timepiece.</p>
+        <p>Our team guides you through selecting the ideal watch for your occasion, budget, and recipient — with bespoke engraving, presentation packaging, and delivery options available across Botswana.</p>
+        <p style="color:var(--white);">Contact us at <strong>info@bishopcobw.com</strong> or visit our boutique at Main Mall, Gaborone.</p>
+        <div style="margin-top:28px;display:flex;gap:14px;justify-content:center;flex-wrap:wrap;">
+          <a href="contact.html" class="btn btn-filled">Request Corporate Enquiry</a>
+          <a href="collections.html" class="btn">Browse All Watches</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- BACK COVER -->
+  <div class="back-cover">
+    <div style="width:1px;height:40px;background:linear-gradient(to bottom,transparent,var(--gold));margin:0 auto 28px;"></div>
+    <div style="font-family:var(--serif);font-size:clamp(32px,5vw,56px);font-weight:300;letter-spacing:0.18em;color:var(--white);">BISHOP &amp; CO.</div>
+    <div style="font-size:9px;letter-spacing:0.45em;color:var(--muted);text-transform:uppercase;margin-top:6px;">Luxury Timepieces</div>
+    <div style="width:48px;height:1px;background:var(--gold);margin:24px auto;"></div>
+    <p style="font-size:12px;color:var(--muted);line-height:1.9;max-width:480px;margin:0 auto;">All pieces are authenticated and sold with full manufacturer documentation. Prices are in Botswana Pula (BWP) and subject to change. Availability is subject to stock.</p>
+    <div class="contact-row">
+      <div><span class="contact-item-label">Address</span><span class="contact-item-val">Main Mall, Gaborone</span></div>
+      <div><span class="contact-item-label">Telephone</span><span class="contact-item-val">+267 3XX XXXX</span></div>
+      <div><span class="contact-item-label">Email</span><span class="contact-item-val">info@bishopcobw.com</span></div>
+      <div><span class="contact-item-label">Hours</span><span class="contact-item-val">Mon–Sat: 09:00–18:00</span></div>
+    </div>
+    <div style="margin-top:40px;font-size:10px;letter-spacing:0.18em;color:var(--muted);">&copy; 2026 Bishop &amp; Co. Luxury Timepieces. All rights reserved.</div>
+  </div>
+
+  <!-- LIGHTBOX -->
+  <div class="lb" id="lb" onclick="if(event.target===this)closeLb()">
+    <div class="lb-content">
+      <button class="lb-close" onclick="closeLb()">&times;</button>
+      <div class="lb-img"><img id="lb-img" src="" alt=""></div>
+      <div class="lb-body">
+        <div class="lb-brand" id="lb-brand"></div>
+        <div class="lb-name" id="lb-name"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST -->
+  <div class="cart-toast" id="cart-toast">Added <span id="toast-name"></span> to cart</div>
+
+  <script src="cart.js"></script>
+  <script>
+    /* ── PDF download ── */
+    function downloadPDF() {
+      var btn = document.getElementById('dl-pdf-btn');
+      btn.disabled = true;
+      btn.innerHTML = '<svg viewBox="0 0 24 24" style="width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:1.8"><line x1="12" y1="2" x2="12" y2="22"/><polyline points="6 16 12 22 18 16"/></svg> Generating…';
+
+      /* Hide interactive / nav elements from the PDF */
+      var uiEls = document.querySelectorAll(
+        'nav, .cat-filter, .print-float, .lb, .cart-toast, ' +
+        '.watch-entry-actions, .cover-actions, .watch-img-zoom'
+      );
+      uiEls.forEach(function(el) { el.style.display = 'none'; });
+
+      /* Also flatten reversed entries so they render left-to-right in PDF */
+      var reversed = document.querySelectorAll('.watch-entry.reverse');
+      reversed.forEach(function(el) { el.style.direction = 'ltr'; });
+
+      var opt = {
+        margin:      [10, 14, 10, 14],
+        filename:    'Bishop-Co-Watch-Catalogue-2026.pdf',
+        image:       { type: 'jpeg', quality: 0.95 },
+        html2canvas: { scale: 2, useCORS: true, logging: false, scrollY: 0 },
+        jsPDF:       { unit: 'mm', format: 'a4', orientation: 'portrait' },
+        pagebreak:   { mode: ['css', 'legacy'], before: '.cat-header' }
+      };
+
+      html2pdf()
+        .set(opt)
+        .from(document.body)
+        .save()
+        .then(restore)
+        .catch(function() { restore(); window.print(); });
+
+      function restore() {
+        uiEls.forEach(function(el) { el.style.display = ''; });
+        reversed.forEach(function(el) { el.style.direction = ''; });
+        btn.disabled = false;
+        btn.innerHTML =
+          '<svg viewBox="0 0 24 24" style="width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:1.8">' +
+          '<path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/>' +
+          '<polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Download PDF';
+      }
+    }
+
+    function catAddToCart(btn) {
+      var entry = btn.closest('.watch-entry');
+      var name = entry.dataset.name;
+      addToCart({
+        id: entry.dataset.id,
+        name: name,
+        brand: entry.dataset.brand,
+        price: parseFloat(entry.dataset.price),
+        img: entry.dataset.img || ''
+      });
+      var orig = btn.textContent;
+      btn.textContent = 'Added \u2713';
+      btn.classList.add('added');
+      setTimeout(function() { btn.textContent = orig; btn.classList.remove('added'); }, 1600);
+      document.getElementById('toast-name').textContent = name;
+      var t = document.getElementById('cart-toast');
+      t.classList.add('show');
+      setTimeout(function() { t.classList.remove('show'); }, 2800);
+    }
+
+    function filterCat(id, btn) {
+      document.querySelectorAll('.cat-filter-btn').forEach(function(b) { b.classList.remove('active'); });
+      btn.classList.add('active');
+      var sections = ['classic','sports','chrono','limited','corporate'];
+      if (id === 'all') {
+        sections.forEach(function(s) { document.getElementById('sec-'+s).style.display = ''; });
+      } else {
+        sections.forEach(function(s) { document.getElementById('sec-'+s).style.display = 'none'; });
+        document.getElementById('sec-'+id).style.display = '';
+      }
+      document.getElementById('cat-content').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function openLb(imgEl) {
+      var entry = imgEl.closest('.watch-entry');
+      var img = imgEl.querySelector('img');
+      document.getElementById('lb-img').src = img ? img.src : '';
+      document.getElementById('lb-img').alt = img ? img.alt : '';
+      document.getElementById('lb-brand').textContent = entry.dataset.brand;
+      document.getElementById('lb-name').textContent = entry.dataset.name;
+      document.getElementById('lb').classList.add('open');
+    }
+
+    function closeLb() {
+      document.getElementById('lb').classList.remove('open');
+    }
+
+    document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeLb(); });
+  </script>
+</body>
+</html>

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Collections — Bishop & Co. Luxury Timepieces</title>
+  <title>Collections — Bishop &amp; Co. Luxury Timepieces</title>
   <link rel="stylesheet" href="style.css" />
   <style>
     /* ── Filter Bar ── */
@@ -90,6 +90,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      overflow: hidden;
     }
     .img-placeholder-label {
       font-size: 9px;
@@ -97,6 +98,14 @@
       color: var(--gold-dim);
       text-align: center;
       text-transform: uppercase;
+    }
+
+    @media (max-width: 900px) {
+      .collection-grid { grid-template-columns: repeat(2, 1fr); }
+      .corporate-banner { grid-template-columns: 1fr; padding: 32px; gap: 32px; }
+    }
+    @media (max-width: 600px) {
+      .collection-grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -121,6 +130,10 @@
           <a href="gallery.html">Gallery</a>
           <a href="contact.html">Contact</a>
         </div>
+        <a href="cart.html" class="nav-cart">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+          <span class="nav-cart-badge" id="cart-count"></span>
+        </a>
       </div>
     </div>
   </nav>
@@ -162,30 +175,46 @@
           <span class="collection-count">3 Timepieces</span>
         </div>
         <div class="collection-grid">
-          <div class="watch-card">
-            <div class="watch-card-img"><img src="images/number%201.webp" alt="Patek Philippe Calatrava 5196" style="width: 100%; height: 100%; object-fit: cover;"></div>
+
+          <div class="watch-card" data-id="patek-calatrava-5196" data-name="Calatrava 5196" data-brand="Patek Philippe" data-price="350000" data-img="images/number%201.webp">
+            <div class="watch-card-img"><img src="images/number%201.webp" alt="Patek Philippe Calatrava 5196" style="width:100%;height:100%;object-fit:cover;"></div>
             <div class="watch-card-body">
               <div class="watch-card-brand">Patek Philippe</div>
               <div class="watch-card-name">Calatrava 5196</div>
-              <a href="contact.html" class="watch-card-btn">Enquire</a>
+              <div class="watch-card-price">BWP 350,000</div>
+              <div class="watch-card-actions">
+                <a href="contact.html" class="watch-card-btn">Enquire</a>
+                <button class="watch-card-btn watch-card-add" onclick="handleAddToCart(this)">Add to Cart</button>
+              </div>
             </div>
           </div>
-          <div class="watch-card">
-            <div class="watch-card-img"><img src="images/number%202.jpg" alt="Cartier Tank Must" style="width: 100%; height: 100%; object-fit: cover;"></div>
+
+          <div class="watch-card" data-id="cartier-tank-must" data-name="Tank Must" data-brand="Cartier" data-price="90000" data-img="images/number%202.jpg">
+            <div class="watch-card-img"><img src="images/number%202.jpg" alt="Cartier Tank Must" style="width:100%;height:100%;object-fit:cover;"></div>
             <div class="watch-card-body">
               <div class="watch-card-brand">Cartier</div>
               <div class="watch-card-name">Tank Must</div>
-              <a href="contact.html" class="watch-card-btn">Enquire</a>
+              <div class="watch-card-price">BWP 90,000</div>
+              <div class="watch-card-actions">
+                <a href="contact.html" class="watch-card-btn">Enquire</a>
+                <button class="watch-card-btn watch-card-add" onclick="handleAddToCart(this)">Add to Cart</button>
+              </div>
             </div>
           </div>
-          <div class="watch-card">
-            <div class="watch-card-img"><img src="images/number%203.jpg" alt="Rolex Datejust 41" style="width: 100%; height: 100%; object-fit: cover;"></div>
+
+          <div class="watch-card" data-id="rolex-datejust-41" data-name="Datejust 41" data-brand="Rolex" data-price="145000" data-img="images/number%203.jpg">
+            <div class="watch-card-img"><img src="images/number%203.jpg" alt="Rolex Datejust 41" style="width:100%;height:100%;object-fit:cover;"></div>
             <div class="watch-card-body">
               <div class="watch-card-brand">Rolex</div>
               <div class="watch-card-name">Datejust 41</div>
-              <a href="contact.html" class="watch-card-btn">Enquire</a>
+              <div class="watch-card-price">BWP 145,000</div>
+              <div class="watch-card-actions">
+                <a href="contact.html" class="watch-card-btn">Enquire</a>
+                <button class="watch-card-btn watch-card-add" onclick="handleAddToCart(this)">Add to Cart</button>
+              </div>
             </div>
           </div>
+
         </div>
       </div>
 
@@ -199,30 +228,46 @@
           <span class="collection-count">3 Timepieces</span>
         </div>
         <div class="collection-grid">
-          <div class="watch-card">
-            <div class="watch-card-img"><img src="images/number%204.jpg" alt="Rolex Submariner Date" style="width: 100%; height: 100%; object-fit: cover;"></div>
+
+          <div class="watch-card" data-id="rolex-submariner-date" data-name="Submariner Date" data-brand="Rolex" data-price="180000" data-img="images/number%204.jpg">
+            <div class="watch-card-img"><img src="images/number%204.jpg" alt="Rolex Submariner Date" style="width:100%;height:100%;object-fit:cover;"></div>
             <div class="watch-card-body">
               <div class="watch-card-brand">Rolex</div>
               <div class="watch-card-name">Submariner Date</div>
-              <a href="contact.html" class="watch-card-btn">Enquire</a>
+              <div class="watch-card-price">BWP 180,000</div>
+              <div class="watch-card-actions">
+                <a href="contact.html" class="watch-card-btn">Enquire</a>
+                <button class="watch-card-btn watch-card-add" onclick="handleAddToCart(this)">Add to Cart</button>
+              </div>
             </div>
           </div>
-          <div class="watch-card">
-            <div class="watch-card-img"><img src="images/number%205.jpg" alt="Omega Seamaster 300M" style="width: 100%; height: 100%; object-fit: cover;"></div>
+
+          <div class="watch-card" data-id="omega-seamaster-300m" data-name="Seamaster 300M" data-brand="Omega" data-price="80000" data-img="images/number%205.jpg">
+            <div class="watch-card-img"><img src="images/number%205.jpg" alt="Omega Seamaster 300M" style="width:100%;height:100%;object-fit:cover;"></div>
             <div class="watch-card-body">
               <div class="watch-card-brand">Omega</div>
               <div class="watch-card-name">Seamaster 300M</div>
-              <a href="contact.html" class="watch-card-btn">Enquire</a>
+              <div class="watch-card-price">BWP 80,000</div>
+              <div class="watch-card-actions">
+                <a href="contact.html" class="watch-card-btn">Enquire</a>
+                <button class="watch-card-btn watch-card-add" onclick="handleAddToCart(this)">Add to Cart</button>
+              </div>
             </div>
           </div>
-          <div class="watch-card">
-            <div class="watch-card-img"><img src="images/number%206.jpg" alt="Cartier Santos de Cartier" style="width: 100%; height: 100%; object-fit: cover;"></div>
+
+          <div class="watch-card" data-id="cartier-santos" data-name="Santos de Cartier" data-brand="Cartier" data-price="110000" data-img="images/number%206.jpg">
+            <div class="watch-card-img"><img src="images/number%206.jpg" alt="Cartier Santos de Cartier" style="width:100%;height:100%;object-fit:cover;"></div>
             <div class="watch-card-body">
               <div class="watch-card-brand">Cartier</div>
               <div class="watch-card-name">Santos de Cartier</div>
-              <a href="contact.html" class="watch-card-btn">Enquire</a>
+              <div class="watch-card-price">BWP 110,000</div>
+              <div class="watch-card-actions">
+                <a href="contact.html" class="watch-card-btn">Enquire</a>
+                <button class="watch-card-btn watch-card-add" onclick="handleAddToCart(this)">Add to Cart</button>
+              </div>
             </div>
           </div>
+
         </div>
       </div>
 
@@ -236,30 +281,46 @@
           <span class="collection-count">3 Timepieces</span>
         </div>
         <div class="collection-grid">
-          <div class="watch-card">
-            <div class="watch-card-img"><img src="images/number%207.jpg" alt="Omega Speedmaster Moonwatch" style="width: 100%; height: 100%; object-fit: cover;"></div>
+
+          <div class="watch-card" data-id="omega-speedmaster" data-name="Speedmaster Moonwatch" data-brand="Omega" data-price="75000" data-img="images/number%207.jpg">
+            <div class="watch-card-img"><img src="images/number%207.jpg" alt="Omega Speedmaster Moonwatch" style="width:100%;height:100%;object-fit:cover;"></div>
             <div class="watch-card-body">
               <div class="watch-card-brand">Omega</div>
               <div class="watch-card-name">Speedmaster Moonwatch</div>
-              <a href="contact.html" class="watch-card-btn">Enquire</a>
+              <div class="watch-card-price">BWP 75,000</div>
+              <div class="watch-card-actions">
+                <a href="contact.html" class="watch-card-btn">Enquire</a>
+                <button class="watch-card-btn watch-card-add" onclick="handleAddToCart(this)">Add to Cart</button>
+              </div>
             </div>
           </div>
-          <div class="watch-card">
-            <div class="watch-card-img"><img src="images/number%208.jpg" alt="Rolex Daytona Cosmograph" style="width: 100%; height: 100%; object-fit: cover;"></div>
+
+          <div class="watch-card" data-id="rolex-daytona" data-name="Daytona Cosmograph" data-brand="Rolex" data-price="450000" data-img="images/number%208.jpg">
+            <div class="watch-card-img"><img src="images/number%208.jpg" alt="Rolex Daytona Cosmograph" style="width:100%;height:100%;object-fit:cover;"></div>
             <div class="watch-card-body">
               <div class="watch-card-brand">Rolex</div>
               <div class="watch-card-name">Daytona Cosmograph</div>
-              <a href="contact.html" class="watch-card-btn">Enquire</a>
+              <div class="watch-card-price">BWP 450,000</div>
+              <div class="watch-card-actions">
+                <a href="contact.html" class="watch-card-btn">Enquire</a>
+                <button class="watch-card-btn watch-card-add" onclick="handleAddToCart(this)">Add to Cart</button>
+              </div>
             </div>
           </div>
-          <div class="watch-card">
-            <div class="watch-card-img"><img src="images/image.jpg" alt="Patek Philippe Aquanaut 5968A" style="width: 100%; height: 100%; object-fit: cover;"></div>
+
+          <div class="watch-card" data-id="patek-aquanaut-5968a" data-name="Aquanaut 5968A" data-brand="Patek Philippe" data-price="600000" data-img="images/image.jpg">
+            <div class="watch-card-img"><img src="images/image.jpg" alt="Patek Philippe Aquanaut 5968A" style="width:100%;height:100%;object-fit:cover;"></div>
             <div class="watch-card-body">
               <div class="watch-card-brand">Patek Philippe</div>
               <div class="watch-card-name">Aquanaut 5968A</div>
-              <a href="contact.html" class="watch-card-btn">Enquire</a>
+              <div class="watch-card-price">BWP 600,000</div>
+              <div class="watch-card-actions">
+                <a href="contact.html" class="watch-card-btn">Enquire</a>
+                <button class="watch-card-btn watch-card-add" onclick="handleAddToCart(this)">Add to Cart</button>
+              </div>
             </div>
           </div>
+
         </div>
       </div>
 
@@ -273,22 +334,33 @@
           <span class="collection-count">2 Timepieces</span>
         </div>
         <div class="collection-grid">
-          <div class="watch-card">
-            <div class="watch-card-img"><img src="images/number%201.webp" alt="Patek Philippe Grandmaster Chime" style="width: 100%; height: 100%; object-fit: cover;"></div>
+
+          <div class="watch-card" data-id="patek-grandmaster-chime" data-name="Grandmaster Chime" data-brand="Patek Philippe" data-price="2500000" data-img="images/number%201.webp">
+            <div class="watch-card-img"><img src="images/number%201.webp" alt="Patek Philippe Grandmaster Chime" style="width:100%;height:100%;object-fit:cover;"></div>
             <div class="watch-card-body">
               <div class="watch-card-brand">Patek Philippe</div>
               <div class="watch-card-name">Grandmaster Chime</div>
-              <a href="contact.html" class="watch-card-btn">Enquire</a>
+              <div class="watch-card-price">BWP 2,500,000</div>
+              <div class="watch-card-actions">
+                <a href="contact.html" class="watch-card-btn">Enquire</a>
+                <button class="watch-card-btn watch-card-add" onclick="handleAddToCart(this)">Add to Cart</button>
+              </div>
             </div>
           </div>
-          <div class="watch-card">
-            <div class="watch-card-img"><img src="images/number%202.jpg" alt="Rolex GMT-Master II Pepsi" style="width: 100%; height: 100%; object-fit: cover;"></div>
+
+          <div class="watch-card" data-id="rolex-gmt-pepsi" data-name="GMT-Master II &quot;Pepsi&quot;" data-brand="Rolex" data-price="220000" data-img="images/number%202.jpg">
+            <div class="watch-card-img"><img src="images/number%202.jpg" alt="Rolex GMT-Master II Pepsi" style="width:100%;height:100%;object-fit:cover;"></div>
             <div class="watch-card-body">
               <div class="watch-card-brand">Rolex</div>
               <div class="watch-card-name">GMT-Master II "Pepsi"</div>
-              <a href="contact.html" class="watch-card-btn">Enquire</a>
+              <div class="watch-card-price">BWP 220,000</div>
+              <div class="watch-card-actions">
+                <a href="contact.html" class="watch-card-btn">Enquire</a>
+                <button class="watch-card-btn watch-card-add" onclick="handleAddToCart(this)">Add to Cart</button>
+              </div>
             </div>
           </div>
+
         </div>
       </div>
 
@@ -310,7 +382,7 @@
             <a href="contact.html" class="btn">Request Corporate Enquiry</a>
           </div>
           <div class="corporate-img">
-            <img src="images/number%2012.jpg" alt="Corporate Gifting" style="width: 100%; height: 100%; object-fit: cover;">
+            <img src="images/number%2012.jpg" alt="Corporate Gifting" style="width:100%;height:100%;object-fit:cover;">
           </div>
         </div>
       </div>
@@ -366,16 +438,17 @@
     </div>
   </footer>
 
+  <script src="cart.js"></script>
   <script>
     function filterSection(id, btn) {
-      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.filter-btn').forEach(function(b) { b.classList.remove('active'); });
       btn.classList.add('active');
-      const sections = document.querySelectorAll('.collection-section');
+      var sections = document.querySelectorAll('.collection-section');
       if (id === 'all') {
-        sections.forEach(s => s.style.display = '');
+        sections.forEach(function(s) { s.style.display = ''; });
       } else {
-        sections.forEach(s => s.style.display = 'none');
-        const target = document.getElementById('sec-' + id);
+        sections.forEach(function(s) { s.style.display = 'none'; });
+        var target = document.getElementById('sec-' + id);
         if (target) target.style.display = '';
       }
     }
