@@ -50,7 +50,8 @@
       margin-bottom: 40px;
       animation: fadeUp 0.8s 0.4s both;
     }
-    .hero-actions { display: flex; gap: 16px; animation: fadeUp 0.8s 0.55s both; }
+    .hero-actions { display: flex; gap: 16px; flex-wrap: wrap; animation: fadeUp 0.8s 0.55s both; }
+    .hero-actions .btn { min-width: 180px; }
     .hero-visual {
       position: relative;
       display: flex;
@@ -201,8 +202,12 @@
       .why-grid { grid-template-columns: 1fr; }
       .cta-inner { flex-direction: column; text-align: center; }
     }
-    @media (max-width: 600px) {
+    @media (max-width: 640px) {
       .featured-grid { grid-template-columns: 1fr; }
+      .hero-actions .btn { width: 100%; min-width: 0; }
+      .hero-actions { justify-content: center; }
+      .cta-inner { gap: 16px; }
+      .cta-inner .btn { width: 100%; max-width: 320px; }
     }
 
     @keyframes fadeUp {
